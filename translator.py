@@ -41,16 +41,27 @@ def remove_double_comma(s: str) -> str:
     return new_s
 
 
-def get_integers(data: str, ind_chars_in_quotes: List[int]) -> List[int]:
+def make_reservation(data):
+    for i in range(len(data)):
+        if "res" in data[i]:
+            cnt = int(data[i].replace("res", ""))
+            data[i] = [0] * cnt
+    return data
+
+
+def get_integers(data: str, ind_chars_in_quotes: List[int]):
     int_data = remove(data, ind_chars_in_quotes)
     # Могут появиться после удаления две запятые подряд - их надо почистить
     int_data = remove_double_comma(int_data)
     # Удаление комментариев
     int_data = int_data.split(';')[0].strip()
-    int_data = list(filter(None, int_data.split(',')))
-    int_data = [int(x) for x in int_data]
+    # все res x заменить на x нулей
+    int_data = make_reservation(int_data.split(','))
+    int_data = list(filter(lambda s: s != ' ' and s != '', int_data))
+    int_data = [x if type(x) is list else int(x) for x in int_data]
     for x in int_data:
-        assert -(1 << 31) <= x <= (1 << 31) - 1, "Integer must take values in the segment [-2^31; 2^31 - 1]"
+        if not (type(x) is list):
+            assert -(1 << 31) <= x <= (1 << 31) - 1, "Integer must take values in the segment [-2^31; 2^31 - 1]"
     return int_data
 
 
@@ -80,8 +91,12 @@ def get_codes_from_data(data: str) -> List[int]:
         while cur_list:
             ind_list_codes += 1
             cur_list = list_codes[ind_list_codes]
-        cur_list.append(x)
 
+        if type(x) is list:
+            for el in x:
+                cur_list.append(el)
+        else:
+            cur_list.append(x)
     # Выпрямление list_codes в один лист
     return list(chain.from_iterable(list_codes))
 
@@ -107,8 +122,8 @@ def get_data(text: List[str]) -> Dict[str, List[int]]:
 
 def translate(text: str):
     text = text.split('\n')
-    labels_of_data = get_data(text)
-    print(labels_of_data)
+    labels2data = get_data(text)
+    print(labels2data)
 
 
 def main(source, target):
