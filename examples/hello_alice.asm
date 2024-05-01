@@ -1,9 +1,9 @@
-section .data
+.data
 question: "What is your name?", 0
 hello_str: "Hello, ", 0
 buffer: res 256
 
-section .text
+.text
 _main:
     push question
     call print_str ;выводит строку, адрес которой сейчас на вершине

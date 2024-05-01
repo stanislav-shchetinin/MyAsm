@@ -1,7 +1,7 @@
-section .data
+.data
 hello_str: "Hello, world!", 0
 
-section .text
+.text
 _main:
     push hello_str
     cycle:

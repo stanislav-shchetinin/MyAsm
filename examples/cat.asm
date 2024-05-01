@@ -1,4 +1,4 @@
-section .text
+.text
 _main:
     input 0
     cycle:
