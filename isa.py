@@ -32,8 +32,8 @@ class Opcode(int, Enum):
 
     HLT = 0x14
 
-    def __str__(self) -> int:
-        return int(self.value)
+    def __str__(self) -> str:
+        return str(self.value)
 
 
 def write_code(filename, code):

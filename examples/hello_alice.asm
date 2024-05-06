@@ -6,7 +6,7 @@ buffer: res 256
 .text
 _main:
     push question
-    call print_str ;выводит строку, адрес которой сейчас на вершине
+    call output_str ;выводит строку, адрес которой сейчас на вершине
     push buffer
     call input_str
     push hello_str

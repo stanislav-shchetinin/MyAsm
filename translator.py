@@ -9,11 +9,11 @@ from typing import List, Dict
 from itertools import chain
 
 
-def get_num_str_declaration_data(text: List[str]) -> int:
+def find_substring_row(text: List[str], substr) -> int:
     num_str_decl_section: int = -1
 
     for index, line in enumerate(text):
-        if ".data" in line:
+        if substr in line:
             assert num_str_decl_section == -1, "Section .data can be declared at most once"
             num_str_decl_section = index
 
@@ -102,7 +102,7 @@ def get_codes_from_data(data: str) -> List[int]:
 
 
 def get_data(text: List[str]) -> Dict[str, List[int]]:
-    num_str_decl_section: int = get_num_str_declaration_data(text)
+    num_str_decl_section: int = find_substring_row(text, ".data")
     label2data: Dict[str, List[int]] = dict()
     for i in range(num_str_decl_section + 1, len(text)):
         line: str = text[i].strip()
@@ -120,24 +120,139 @@ def get_data(text: List[str]) -> Dict[str, List[int]]:
     return label2data
 
 
+def name2opcode() -> Dict[str, Opcode]:
+    return {
+        "push": Opcode.PUSH,
+        "pop": Opcode.POP,
+        "jmp": Opcode.JMP,
+        "jz": Opcode.JZ,
+        "jnz": Opcode.JNZ,
+        "js": Opcode.JS,
+        "jns": Opcode.JNS,
+        "call": Opcode.CALL,
+        "ret": Opcode.RET,
+        "input": Opcode.INPUT,
+        "output": Opcode.OUTPUT,
+        "inc": Opcode.INC,
+        "dec": Opcode.DEC,
+        "add": Opcode.ADD,
+        "sub": Opcode.SUB,
+        "mul": Opcode.MUL,
+        "div": Opcode.DIV,
+        "load": Opcode.LOAD,
+        "store": Opcode.STORE,
+        "swap": Opcode.SWAP,
+        "hlt": Opcode.HLT
+    }
+
+
+def cmd_with_args():
+    return {
+        Opcode.PUSH,
+        Opcode.JMP,
+        Opcode.JZ,
+        Opcode.JNZ,
+        Opcode.JS,
+        Opcode.JNS,
+        Opcode.CALL,
+        Opcode.INPUT,
+        Opcode.OUTPUT
+    }
+
+
+def get_meaningful_token(line: str) -> str:
+    return line.split(";", 1)[0].strip()
+
+
+def translate_stage_1(text: List[str]):
+    code = []
+    labels = {}
+    num_str_decl_section: int = find_substring_row(text, ".text")
+    for ind in range(num_str_decl_section + 1, len(text)):
+        raw_line = text[ind]
+        token = get_meaningful_token(raw_line)
+        if token == "" or ".data" in token:
+            continue
+
+        pc = len(code)
+        if token.endswith(":"):  # токен содержит метку
+            label = token.strip(":")
+            assert label not in labels, "Redefinition of label: {}".format(label)
+            labels[label] = pc
+        elif " " in token:  # токен содержит инструкцию с операндом (отделены пробелом)
+            sub_tokens = token.split(" ")
+            assert len(sub_tokens) == 2, "Invalid instruction: {}".format(token)
+            mnemonic, arg = sub_tokens
+            opcode = name2opcode().get(mnemonic)
+            assert opcode in cmd_with_args(), "{} must have one argument".format(opcode)
+            code.append({"index": pc, "opcode": opcode, "arg": arg})
+        else:  # токен содержит инструкцию без операндов
+            opcode = name2opcode().get(token)
+            assert opcode not in cmd_with_args(), '{} must have zero argument'.format(opcode)
+            code.append({"index": pc, "opcode": opcode})
+
+    return labels, code
+
+
+def translate_stage_2(labels, code):
+    for instruction in code:
+        if "arg" in instruction:
+            if instruction["opcode"] in {Opcode.INPUT, Opcode.OUTPUT, Opcode.PUSH}:
+                continue
+
+            label = instruction["arg"]
+            assert label in labels, "Label not defined: " + label
+            instruction["arg"] = labels[label]
+    return code
+
+
+def translate_code(text: List[str]):
+    labels, code = translate_stage_1(text)
+    return translate_stage_2(labels, code)
+
+
+def get_labels_to_num(labels2data: Dict[str, List[int]]) -> Dict[str, int]:
+    labels2num: Dict[str, int] = {}
+    cur_num = 0
+    for label, data in labels2data.items():
+        labels2num[label] = cur_num
+        cur_num += len(data)
+    return labels2num
+
+
+def is_number(s: str) -> bool:
+    if len(s) <= 1:
+        return s.isdigit()
+    return s.isdigit() or (s[1::].isdigit() and s[0] in {'+', '-'})
+
+
+def replace_push_arg(code, labels2data):
+    labels2num: Dict[str, int] = get_labels_to_num(labels2data)
+    for instruction in code:
+        if instruction["opcode"] == Opcode.PUSH and not is_number(instruction["arg"]):
+            instruction["arg"] = labels2num[instruction["arg"]]
+    return code
+
+
 def translate(text: str):
-    text = text.split('\n')
+    text = text.splitlines()
     labels2data = get_data(text)
-    print(labels2data)
+    code = replace_push_arg(translate_code(text), labels2data)
+    return labels2data, code
 
 
-def main(source, target):
+def main(source_file, target_data_file, target_program_file):
     """Функция запуска транслятора. Параметры -- исходный и целевой файлы."""
-    with open(source, encoding="utf-8") as f:
+    with open(source_file, encoding="utf-8") as f:
         source = f.read()
 
-    code = translate(source)
+    data, code = translate(source)
 
-    # write_code(target, code)
     # print("source LoC:", len(source.split("\n")), "code instr:", len(code))
 
 
 if __name__ == "__main__":
-    assert len(sys.argv) == 3, "Wrong arguments: translator_asm.py <input_file> <target_file>"
-    _, source, target = sys.argv
-    main(source, target)
+    assert len(sys.argv) == 4, ("Wrong arguments: translator_asm.py <input_file> <target_data_file> "
+                                "<target_program_file>")
+    _, source_file, target_data_file, target_program_file = sys.argv
+    main(source_file, target_data_file, target_program_file)
