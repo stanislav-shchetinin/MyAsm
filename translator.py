@@ -4,8 +4,8 @@
 
 import sys
 
-from isa import Opcode, write_code
-from typing import List, Dict
+from isa import Opcode, write_code, write_data, read_data, read_code
+from typing import List, Dict, Union
 from itertools import chain
 
 
@@ -164,9 +164,9 @@ def get_meaningful_token(line: str) -> str:
     return line.split(";", 1)[0].strip()
 
 
-def translate_stage_1(text: List[str]):
-    code = []
-    labels = {}
+def translate_stage_1(text: List[str]) -> (Dict[str, int], List[Dict[str, Union[Opcode, str, None, int]]]):
+    code: List[Dict[str, Union[Opcode, str, None]]] = []
+    labels: Dict[str, int] = {}
     num_str_decl_section: int = find_substring_row(text, ".text")
     for ind in range(num_str_decl_section + 1, len(text)):
         raw_line = text[ind]
@@ -194,7 +194,7 @@ def translate_stage_1(text: List[str]):
     return labels, code
 
 
-def translate_stage_2(labels, code):
+def translate_stage_2(labels: Dict[str, int], code: List[Dict[str, Union[Opcode, str, None, int]]]):
     for instruction in code:
         if "arg" in instruction:
             if instruction["opcode"] in {Opcode.INPUT, Opcode.OUTPUT, Opcode.PUSH}:
@@ -206,7 +206,7 @@ def translate_stage_2(labels, code):
     return code
 
 
-def translate_code(text: List[str]):
+def translate_code(text: List[str]) -> List[Dict[str, Union[Opcode, str, None, int]]]:
     labels, code = translate_stage_1(text)
     return translate_stage_2(labels, code)
 
@@ -226,7 +226,8 @@ def is_number(s: str) -> bool:
     return s.isdigit() or (s[1::].isdigit() and s[0] in {'+', '-'})
 
 
-def replace_push_arg(code, labels2data):
+def replace_push_arg(code: List[Dict[str, Union[Opcode, str, None, int]]], labels2data: Dict[str, List[int]])\
+        -> List[Dict[str, Union[Opcode, str, None, int]]]:
     labels2num: Dict[str, int] = get_labels_to_num(labels2data)
     for instruction in code:
         if instruction["opcode"] == Opcode.PUSH and not is_number(instruction["arg"]):
@@ -234,7 +235,7 @@ def replace_push_arg(code, labels2data):
     return code
 
 
-def translate(text: str):
+def translate(text: str) -> (Dict[str, List[int]], List[Dict[str, Union[Opcode, str, None, int]]]):
     text = text.splitlines()
     labels2data = get_data(text)
     code = replace_push_arg(translate_code(text), labels2data)
@@ -247,8 +248,9 @@ def main(source_file, target_data_file, target_program_file):
         source = f.read()
 
     data, code = translate(source)
-
-    # print("source LoC:", len(source.split("\n")), "code instr:", len(code))
+    write_data(target_data_file, data)
+    write_code(target_program_file, code)
+    print("source LoC:", len(source.split("\n")), "code instr:", len(code))
 
 
 if __name__ == "__main__":
