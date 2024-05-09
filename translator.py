@@ -243,7 +243,6 @@ def translate(text: str) -> (Dict[str, List[int]], List[Dict[str, Union[Opcode, 
 
 
 def main(source_file, target_data_file, target_program_file):
-    """Функция запуска транслятора. Параметры -- исходный и целевой файлы."""
     with open(source_file, encoding="utf-8") as f:
         source = f.read()
 
