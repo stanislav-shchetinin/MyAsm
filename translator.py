@@ -230,7 +230,7 @@ def replace_push_arg(code: List[Dict[str, Union[Opcode, str, None, int]]], label
         -> List[Dict[str, Union[Opcode, str, None, int]]]:
     labels2num: Dict[str, int] = get_labels_to_num(labels2data)
     for instruction in code:
-        if instruction["opcode"] == Opcode.PUSH and not is_number(instruction["arg"]):
+        if instruction["opcode"] is Opcode.PUSH and not is_number(instruction["arg"]):
             instruction["arg"] = labels2num[instruction["arg"]]
     return code
 

@@ -72,7 +72,7 @@ def read_data(filename) -> List[int]:
     with open(filename, "rb") as file:
         byte_content = file.read()
         ind = 0
-        while ind < len(byte_content) / 4:
+        while ind < len(byte_content):
             res.append(bytes_to_int(byte_content[ind:ind + 4]))
             ind += 4
     return res
