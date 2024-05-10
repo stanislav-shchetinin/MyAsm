@@ -8,8 +8,6 @@ from enum import Enum
 from typing import List, Dict
 
 
-# sel_pc_next -> sel_next
-
 class Signal(int, Enum):
     LATCH_SP = 1
     LATCH_SWR = (1 << 1)
@@ -133,7 +131,7 @@ class DataPath:
     def __init__(self, data_file, stack_capacity, input_tokens: List[str]):
         self.data_memory = read_data(data_file)
         self.stack_registers = [0] * stack_capacity
-        self.stack_pointer = 0
+        self.stack_pointer = -1
         self.swap_register = 0
         self.tos = 0
         self.result_alu = 0
@@ -203,11 +201,11 @@ class DataPath:
 
 class ControlUnit:
     program = None
-
-    program_counter = None
-
-    data_path = None
-
+    pc = None
+    mpc = None
+    data_path: DataPath = None
+    call_stack = None
+    scp = None
     _tick = None
 
     opcode_to_mp = {
@@ -233,11 +231,34 @@ class ControlUnit:
         Opcode.STORE: 42
     }
 
-    def __init__(self, program, data_path):
+    def __init__(self, program, data_path: DataPath, call_stack_capacity):
         self.program = program
-        self.program_counter = 0
+        self.pc = 0
+        self.mpc = 0
         self.data_path = data_path
+        self.call_stack = [0] * call_stack_capacity
+        self.scp = -1
         self._tick = 0
+
+    @staticmethod
+    def __int_to_list_signals(mc: int) -> List[Signal]:
+        signals: List[Signal] = []
+
+        # add signals from latch_sp (0) to sel_pc (24)
+        for i in range(25):
+            mask = (1 << i)
+            if (mc & mask) != 0:
+                signals.append(Signal(mask))
+
+        alu_mask = (1 << 25) + (1 << 26) + (1 << 27)
+        if (mc & alu_mask) != 0:
+            signals.append(Signal(mc & alu_mask))
+
+        jmp_mask = (1 << 28) + (1 << 29) + (1 << 30)
+        if (mc & jmp_mask) != 0:
+            signals.append(Signal(mc & jmp_mask))
+
+        return signals
 
     def tick(self):
         self._tick += 1
@@ -245,7 +266,43 @@ class ControlUnit:
     def current_tick(self):
         return self._tick
 
+    def latch_pc(self, sel: List[Signal]):
+        tos = self.data_path.tos
 
+        # First MUX
+        if Signal.SEL_JS and tos < 0 \
+                or Signal.SEL_JNS and tos >= 0 \
+                or Signal.SEL_JZ and tos == 0 \
+                or Signal.SEL_JNZ and tos != 0:
+            sel.append(Signal.SEL_JMP)
+
+        # Second MUX
+        if Signal.SEL_JMP in sel:
+            self.pc = self.program[self.pc]["arg"]
+        elif Signal.SEL_RET in sel:
+            assert self.pc >= 0, "return with empty call stack"
+            self.pc = self.call_stack[self.scp]
+        elif Signal.SEL_NEXT in sel:
+            self.pc += 1
+
+    def latch_mpc(self, sel: List[Signal]):
+        if Signal.SEL_MPC_ZERO in sel:
+            self.mpc = 0
+        elif Signal.SEL_MPC_NEXT in sel:
+            self.mpc += 1
+        elif Signal.SEL_MPC_OPCODE in sel:
+            self.mpc = self.opcode_to_mp[self.program["opcode"]]
+
+    def latch_scp(self, sel: List[Signal]):
+        if Signal.SEL_SCP_NEXT in sel:
+            self.scp += 1
+            assert self.scp < len(self.call_stack), "call stack capacity exceeded"
+        elif Signal.SEL_SCP_PREV in sel:
+            self.scp -= 1
+            assert self.scp < 0, "a negative scp was received"
+
+    def latch_callst(self):
+        self.call_stack[self.scp] = self.pc + 1
 
 def simulation(code, input_tokens, data_memory_size, limit):
     """Подготовка модели и запуск симуляции процессора.
