@@ -5,41 +5,109 @@ import sys
 
 from isa import Opcode, read_code, read_data
 from enum import Enum
+from typing import List, Dict
 
-class Singnals(int, Enum):
-    A = 1
-    B = 1
+
+class Signal(int, Enum):
+    LATCH_SP = 0
+    LATCH_SWR = (1 << 1)
+    LATCH_TOS = (1 << 2)
+    WRITE_DM = (1 << 3)
+    WRITE_IO = (1 << 4)
+    LATCH_SREG = (1 << 5)
+    SEL_SP_NEXT = (1 << 6)
+    SEL_SP_PREV = (1 << 7)
+    SEL_SREG_SWR = (1 << 8)
+    SEL_SREG_TOS = (1 << 9)
+    LATCH_PC = (1 << 10)
+    LATCH_MPC = (1 << 11)
+    LATCH_SCP = (1 << 12)
+    LATCH_CALLST = (1 << 13)
+    SEL_TOS_SREG = (1 << 14)
+    SEL_TOS_DATA_MEM = (1 << 15)
+    SEL_TOS_ALU = (1 << 16)
+    SEL_TOS_INPUT = (1 << 17)
+    SEL_TOS_CU_ARG = (1 << 18)
+    SEL_MPC_ZERO = (1 << 19)
+    SEL_MPC_OPCODE = (1 << 20)
+    SEL_MPC_NEXT = (1 << 21)
+    SEL_SCP_NEXT = (1 << 22)
+    SEL_SCP_PREV = (1 << 23)
+    SEL_PC = (1 << 24)
+    ALU_SUM = (1 << 25)
+    ALU_SUB = (1 << 26)
+    ALU_MUL = (1 << 25) + (1 << 26)
+    ALU_DIV = (1 << 27)
+    ALU_INC = (1 << 27) + (1 << 25)
+    ALU_DEC = (1 << 27) + (1 << 26)
+    SEL_JMP = (1 << 28)
+    SEL_JS = (1 << 29)
+    SEL_JNS = (1 << 29) + (1 << 28)
+    SEL_JZ = (1 << 30)
+    SEL_JNZ = (1 << 30) + (1 << 28)
+    SEL_RET = (1 << 30) + (1 << 29)
+    SEL_NEXT = (1 << 30) + (1 << 29) + (1 << 28)
+
 
 class DataPath:
-    stack_registers = None
+    stack_registers: List[int] = None
     stack_pointer = None
     swap_register = None
     tos = None
-    data_memory = None
+    data_memory: List[int] = None
     io_controller = None
+    alu = None
+    cu_arg = None
+    io_ports: Dict[int, List[str]] = None
 
-    def __init__(self, data_file, stack_capacity):
+    def __init__(self, data_file, stack_capacity, input_tokens: List[str]):
         self.data_memory = read_data(data_file)
         self.stack_registers = [0] * stack_capacity
         self.stack_pointer = 0
         self.swap_register = 0
         self.tos = 0
+        self.alu = DataPath.ALU()
+        self.cu_arg = 0
+        self.io_ports = {0: input_tokens}  # 0 - input, 1 - output by default
+        for num_port in range(1, 16):  # count of ports is 16
+            self.io_ports[num_port] = []
 
-    def latch_sp(self, sel: SelectSP):
-        assert sel in {
-            SelectSP.NEXT,
-            SelectSP.PREV
-        }, "internal error, incorrect selector: {}".format(sel)
+    def latch_sp(self, sel: List[Signal]):
 
-        if sel == SelectSP.NEXT:
+        if Signal.SEL_SP_NEXT in sel:
             self.stack_pointer += 1
             assert self.stack_pointer < len(self.stack_registers), "stack capacity exceeded"
-        elif sel == SelectSP.PREV:
+        elif Signal.SEL_SP_PREV in sel:
             self.stack_pointer -= 1
             assert self.stack_pointer < 0, "a negative stack pointer was received"
 
     def latch_swr(self):
         self.swap_register = self.tos
+
+    def latch_tos(self, sel: List[Signal]):
+        if Signal.SEL_TOS_ALU in sel:
+            self.tos = self.alu.result
+        elif Signal.SEL_TOS_SREG in sel:
+            self.tos = self.stack_registers[self.stack_pointer]
+        elif Signal.SEL_TOS_CU_ARG in sel:
+            self.tos = self.cu_arg
+        elif Signal.SEL_TOS_DATA_MEM in sel:
+            top_stack_registers = self.stack_registers[self.stack_pointer]
+            self.tos = self.data_memory[top_stack_registers]
+        elif Signal.SEL_TOS_INPUT in sel:
+            buffer = self.io_ports[self.cu_arg]
+            assert buffer, "attempt to read an empty buffer"
+            self.tos = buffer[0]
+            buffer.pop()
+
+    class ALU:
+        result = None
+
+        def __init__(self):
+            self.result = 0
+
+        def add(self, left: int, right: int):
+            self.result = left + right
 
 
 class ControlUnit:
