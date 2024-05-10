@@ -56,7 +56,7 @@ class DataPath:
     tos = None
     data_memory: List[int] = None
     io_controller = None
-    alu = None
+    result_alu = None
     cu_arg = None
     io_ports: Dict[int, List[str]] = None
 
@@ -66,7 +66,7 @@ class DataPath:
         self.stack_pointer = 0
         self.swap_register = 0
         self.tos = 0
-        self.alu = DataPath.ALU()
+        self.result_alu = 0
         self.cu_arg = 0
         self.io_ports = {0: input_tokens}  # 0 - input, 1 - output by default
         for num_port in range(1, 16):  # count of ports is 16
@@ -86,7 +86,7 @@ class DataPath:
 
     def latch_tos(self, sel: List[Signal]):
         if Signal.SEL_TOS_ALU in sel:
-            self.tos = self.alu.result
+            self.tos = self.result_alu
         elif Signal.SEL_TOS_SREG in sel:
             self.tos = self.stack_registers[self.stack_pointer]
         elif Signal.SEL_TOS_CU_ARG in sel:
@@ -100,15 +100,26 @@ class DataPath:
             self.tos = buffer[0]
             buffer.pop()
 
-    class ALU:
-        result = None
+    def __top_stack_regs(self) -> int:
+        return self.stack_registers[self.stack_pointer]
 
-        def __init__(self):
-            self.result = 0
+    def alu_add(self):
+        self.result_alu = self.tos + self.__top_stack_regs()
 
-        def add(self, left: int, right: int):
-            self.result = left + right
+    def alu_sub(self):
+        self.result_alu = self.tos - self.__top_stack_regs()
 
+    def alu_mul(self):
+        self.result_alu = self.tos * self.__top_stack_regs()
+
+    def alu_div(self):
+        self.result_alu = self.tos / self.__top_stack_regs()
+
+    def alu_inc(self):
+        self.result_alu += 1
+
+    def alu_dec(self):
+        self.result_alu -= 1
 
 class ControlUnit:
     program = None
