@@ -128,8 +128,8 @@ class DataPath:
     cu_arg = None
     io_ports: Dict[int, List[str]] = None
 
-    def __init__(self, data_file, stack_capacity, input_tokens: List[str]):
-        self.data_memory = read_data(data_file)
+    def __init__(self, data, stack_capacity, input_tokens: List[str]):
+        self.data_memory = data
         self.stack_registers = [0] * stack_capacity
         self.stack_pointer = -1
         self.swap_register = 0
@@ -270,10 +270,10 @@ class ControlUnit:
         tos = self.data_path.tos
 
         # First MUX
-        if Signal.SEL_JS and tos < 0 \
-                or Signal.SEL_JNS and tos >= 0 \
-                or Signal.SEL_JZ and tos == 0 \
-                or Signal.SEL_JNZ and tos != 0:
+        if Signal.SEL_JS in sel and tos < 0 \
+                or Signal.SEL_JNS in sel and tos >= 0 \
+                or Signal.SEL_JZ in sel and tos == 0 \
+                or Signal.SEL_JNZ in sel and tos != 0:
             sel.append(Signal.SEL_JMP)
 
         # Second MUX
@@ -291,7 +291,7 @@ class ControlUnit:
         elif Signal.SEL_MPC_NEXT in sel:
             self.mpc += 1
         elif Signal.SEL_MPC_OPCODE in sel:
-            self.mpc = self.opcode_to_mp[self.program["opcode"]]
+            self.mpc = self.opcode_to_mp[Opcode(self.program[self.pc]["opcode"])]
 
     def latch_scp(self, sel: List[Signal]):
         if Signal.SEL_SCP_NEXT in sel:
@@ -304,44 +304,66 @@ class ControlUnit:
     def latch_callst(self):
         self.call_stack[self.scp] = self.pc + 1
 
-def simulation(code, input_tokens, data_memory_size, limit):
-    """Подготовка модели и запуск симуляции процессора.
+    def execute_microprogram(self, mprogram: int):
+        signals = self.__int_to_list_signals(mprogram)
+        if Signal.LATCH_SP in signals:
+            self.data_path.latch_sp(signals)
+        if Signal.LATCH_TOS in signals:
+            self.data_path.latch_tos(signals)
+        if Signal.LATCH_SWR in signals:
+            self.data_path.latch_swr()
+        if Signal.WRITE_DM in signals:
+            self.data_path.write_dm()
+        if Signal.WRITE_IO in signals:
+            self.data_path.write_io()
+        if Signal.LATCH_SREG in signals:
+            self.data_path.latch_sreg()
+        if Signal.LATCH_PC in signals:
+            self.latch_pc(signals)
+        if Signal.LATCH_MPC in signals:
+            self.latch_mpc(signals)
+        if Signal.LATCH_SCP in signals:
+            self.latch_scp(signals)
+        if Signal.LATCH_CALLST in signals:
+            self.latch_callst()
+        if Signal.ALU_SUM in signals:
+            self.data_path.alu_add()
+        if Signal.ALU_SUB in signals:
+            self.data_path.alu_sub()
+        if Signal.ALU_MUL in signals:
+            self.data_path.alu_mul()
+        if Signal.ALU_DIV in signals:
+            self.data_path.alu_div()
+        if Signal.ALU_INC in signals:
+            self.data_path.alu_inc()
+        if Signal.ALU_DEC in signals:
+            self.data_path.alu_dec()
 
-    Длительность моделирования ограничена:
 
-    - количеством выполненных инструкций (`limit`);
-
-    - количеством данных ввода (`input_tokens`, если ввод используется), через
-      исключение `EOFError`;
-
-    - инструкцией `Halt`, через исключение `StopIteration`.
-    """
-    data_path = DataPath(data_memory_size, input_tokens)
-    control_unit = ControlUnit(code, data_path)
+def simulation(code, data, input_tokens) -> (str, int, int):
+    data_path = DataPath(data, 256, input_tokens)
+    control_unit = ControlUnit(code, data_path, 1024)
     instr_counter = 0
 
-    logging.debug("%s", control_unit)
+    # logging.debug("%s", control_unit)
     try:
-        while instr_counter < limit:
-            control_unit.decode_and_execute_instruction()
+        while True:
+            data_path.cu_arg = control_unit.program[control_unit.pc]["arg"]
+            mprogram = m_program[control_unit.mpc]
+            control_unit.execute_microprogram(mprogram)
             instr_counter += 1
-            logging.debug("%s", control_unit)
-    except EOFError:
-        logging.warning("Input buffer is empty!")
+            # logging.debug("%s", control_unit)
     except StopIteration:
         pass
 
-    if instr_counter >= limit:
-        logging.warning("Limit exceeded!")
-    logging.info("output_buffer: %s", repr("".join(data_path.output_buffer)))
-    return "".join(data_path.output_buffer), instr_counter, control_unit.current_tick()
+    output_buffer = data_path.io_ports[1]
+    logging.info("output_buffer: %s", repr("".join(output_buffer)))
+    return "".join(output_buffer), instr_counter, control_unit.current_tick()
 
 
-def main(code_file, input_file):
-    """Функция запуска модели процессора. Параметры -- имена файлов с машинным
-    кодом, с данными и с входными данными для симуляции.
-    """
+def main(code_file, data_file, input_file):
     code = read_code(code_file)
+    data = read_data(data_file)
     with open(input_file, encoding="utf-8") as file:
         input_text = file.read()
         input_token = []
@@ -350,9 +372,8 @@ def main(code_file, input_file):
 
     output, instr_counter, ticks = simulation(
         code,
-        input_tokens=input_token,
-        data_memory_size=100,
-        limit=1000,
+        data,
+        input_token
     )
 
     print("".join(output))
@@ -361,6 +382,6 @@ def main(code_file, input_file):
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.DEBUG)
-    assert len(sys.argv) == 4, "Wrong arguments: machine.py <code_file> <data_file> <input_file>"
-    _, code_file, input_file = sys.argv
-    main(code_file, input_file)
+    assert len(sys.argv) == 4, "Wrong arguments: machine.py <data_file> <code_file> <input_file>"
+    _, data_file, code_file, input_file = sys.argv
+    main(code_file, data_file, input_file)
