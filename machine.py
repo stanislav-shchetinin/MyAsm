@@ -7,9 +7,10 @@ from isa import Opcode, read_code, read_data
 from enum import Enum
 from typing import List, Dict
 
+# sel_pc_next -> sel_next
 
 class Signal(int, Enum):
-    LATCH_SP = 0
+    LATCH_SP = 1
     LATCH_SWR = (1 << 1)
     LATCH_TOS = (1 << 2)
     WRITE_DM = (1 << 3)
@@ -48,6 +49,73 @@ class Signal(int, Enum):
     SEL_RET = (1 << 30) + (1 << 29)
     SEL_NEXT = (1 << 30) + (1 << 29) + (1 << 28)
 
+
+m_program = [
+    # Instruction Fetch
+    0b100000000100000000000,
+    # push
+    0b1000000000100001000001,
+    0b1000000000101000100000,
+    0b1110000000011000000110000000100,
+    # jmp
+    0b10001000010000000110000000000,
+    # jz
+    0b1000001000010000000110000000000,
+    # jnz
+    0b1010001000010000000110000000000,
+    # js
+    0b100001000010000000110000000000,
+    # jns
+    0b110001000010000000110000000000,
+    # call
+    0b10000011000000001100000000000,
+    0b1000000010100000000000,
+    0b1000010000000110000000000,
+    # ret
+    0b1100001001000000000110000000000,
+    0b100010000001100000000000,
+    # input
+    0b1000000000100001000001,
+    0b1000000000101000100000,
+    0b1110000000010100000110000000100,
+    # output
+    0b1110000000010000000110000010000,
+    # pop
+    0b1000000100100000000100,
+    0b1110000000010000000110010000001,
+    # swap
+    0b1000000100100000000110,
+    0b1110000000010000000100100100000,
+    # add
+    0b1000000000100000000010,
+    0b10001000010000100001000100,
+    0b1110000000010000000110100100000,
+    # sub
+    0b1000000000100000000010,
+    0b100001000010000100001000100,
+    0b1110000000010000000110100100000,
+    # mul
+    0b1000000000100000000010,
+    0b110001000010000100001000100,
+    0b1110000000010000000110100100000,
+    # div
+    0b1000000000100000000010,
+    0b1000001000010000100001000100,
+    0b1110000000010000000110100100000,
+    # inc
+    0b1000000000100000000010,
+    0b1010001000010000100001000100,
+    0b1110000000010000000110100100000,
+    # dec
+    0b1000000000100000000010,
+    0b1100001000010000100001000100,
+    0b1110000000010000000110100100000,
+    # load
+    0b1000001000100001000011,
+    0b1110000000010000000110100100000,
+    # store
+    0b1110000000010000000110000001000,
+]
 
 class DataPath:
     stack_registers: List[int] = None
@@ -132,16 +200,12 @@ class DataPath:
 
 class ControlUnit:
     program = None
-    "Память команд."
 
     program_counter = None
-    "Счётчик команд. Инициализируется нулём."
 
     data_path = None
-    "Блок обработки данных."
 
     _tick = None
-    "Текущее модельное время процессора (в тактах). Инициализируется нулём."
 
     def __init__(self, program, data_path):
         self.program = program
@@ -150,123 +214,10 @@ class ControlUnit:
         self._tick = 0
 
     def tick(self):
-        """Продвинуть модельное время процессора вперёд на один такт."""
         self._tick += 1
 
     def current_tick(self):
-        """Текущее модельное время процессора (в тактах)."""
         return self._tick
-
-    def signal_latch_program_counter(self, sel_next):
-        """Защёлкнуть новое значение счётчика команд.
-
-        Если `sel_next` равен `True`, то счётчик будет увеличен на единицу,
-        иначе -- будет установлен в значение аргумента текущей инструкции.
-        """
-        if sel_next:
-            self.program_counter += 1
-        else:
-            instr = self.program[self.program_counter]
-            assert "arg" in instr, "internal error"
-            self.program_counter = instr["arg"]
-
-    def decode_and_execute_control_flow_instruction(self, instr, opcode):
-        """Декодировать и выполнить инструкцию управления потоком исполнения. В
-        случае успеха -- вернуть `True`, чтобы перейти к следующей инструкции.
-        """
-        if opcode is Opcode.HALT:
-            raise StopIteration()
-
-        if opcode is Opcode.JMP:
-            addr = instr["arg"]
-            self.program_counter = addr
-            self.tick()
-
-            return True
-
-        if opcode is Opcode.JZ:
-            addr = instr["arg"]
-
-            self.data_path.signal_latch_acc()
-            self.tick()
-
-            if self.data_path.zero():
-                self.signal_latch_program_counter(sel_next=False)
-            else:
-                self.signal_latch_program_counter(sel_next=True)
-            self.tick()
-
-            return True
-
-        return False
-
-    def decode_and_execute_instruction(self):
-        """Основной цикл процессора. Декодирует и выполняет инструкцию.
-
-        Обработка инструкции:
-
-        1. Проверить `Opcode`.
-
-        2. Вызвать методы, имитирующие необходимые управляющие сигналы.
-
-        3. Продвинуть модельное время вперёд на один такт (`tick`).
-
-        4. (если необходимо) повторить шаги 2-3.
-
-        5. Перейти к следующей инструкции.
-
-        Обработка функций управления потоком исполнения вынесена в
-        `decode_and_execute_control_flow_instruction`.
-        """
-        instr = self.program[self.program_counter]
-        opcode = instr["opcode"]
-
-        if self.decode_and_execute_control_flow_instruction(instr, opcode):
-            return
-
-        if opcode in {Opcode.RIGHT, Opcode.LEFT}:
-            self.data_path.signal_latch_data_addr(opcode.value)
-            self.signal_latch_program_counter(sel_next=True)
-            self.tick()
-
-        elif opcode in {Opcode.INC, Opcode.DEC, Opcode.INPUT}:
-            self.data_path.signal_latch_acc()
-            self.tick()
-
-            self.data_path.signal_wr(opcode.value)
-            self.signal_latch_program_counter(sel_next=True)
-            self.tick()
-
-        elif opcode is Opcode.PRINT:
-            self.data_path.signal_latch_acc()
-            self.tick()
-
-            self.data_path.signal_output()
-            self.signal_latch_program_counter(sel_next=True)
-            self.tick()
-
-    def __repr__(self):
-        """Вернуть строковое представление состояния процессора."""
-        state_repr = "TICK: {:3} PC: {:3} ADDR: {:3} MEM_OUT: {} ACC: {}".format(
-            self._tick,
-            self.program_counter,
-            self.data_path.data_address,
-            self.data_path.data_memory[self.data_path.data_address],
-            self.data_path.acc,
-        )
-
-        instr = self.program[self.program_counter]
-        opcode = instr["opcode"]
-        instr_repr = str(opcode)
-
-        if "arg" in instr:
-            instr_repr += " {}".format(instr["arg"])
-
-        if "term" in instr:
-            term = instr["term"]
-            instr_repr += "  ('{}'@{}:{})".format(term.symbol, term.line, term.pos)
-
-        return "{} \t{}".format(state_repr, instr_repr)
 
 
 def simulation(code, input_tokens, data_memory_size, limit):
