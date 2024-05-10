@@ -84,24 +84,33 @@ class DataPath:
     def latch_swr(self):
         self.swap_register = self.tos
 
+    def __top_stack_regs(self) -> int:
+        return self.stack_registers[self.stack_pointer]
+
     def latch_tos(self, sel: List[Signal]):
         if Signal.SEL_TOS_ALU in sel:
             self.tos = self.result_alu
         elif Signal.SEL_TOS_SREG in sel:
-            self.tos = self.stack_registers[self.stack_pointer]
+            self.tos = self.__top_stack_regs()
         elif Signal.SEL_TOS_CU_ARG in sel:
             self.tos = self.cu_arg
         elif Signal.SEL_TOS_DATA_MEM in sel:
-            top_stack_registers = self.stack_registers[self.stack_pointer]
-            self.tos = self.data_memory[top_stack_registers]
+            self.tos = self.data_memory[self.__top_stack_regs()]
         elif Signal.SEL_TOS_INPUT in sel:
             buffer = self.io_ports[self.cu_arg]
             assert buffer, "attempt to read an empty buffer"
             self.tos = buffer[0]
             buffer.pop()
 
-    def __top_stack_regs(self) -> int:
-        return self.stack_registers[self.stack_pointer]
+    def write_dm(self):
+        self.data_memory[self.__top_stack_regs()] = self.tos
+
+    def write_io(self):
+        assert self.cu_arg in self.io_ports, "Invalid port"
+        self.io_ports[self.cu_arg].append(chr(self.tos))
+
+    def latch_sreg(self):
+        self.stack_registers[self.stack_pointer] = self.tos
 
     def alu_add(self):
         self.result_alu = self.tos + self.__top_stack_regs()
