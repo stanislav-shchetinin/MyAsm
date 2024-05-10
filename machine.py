@@ -7,6 +7,7 @@ from isa import Opcode, read_code, read_data
 from enum import Enum
 from typing import List, Dict
 
+
 # sel_pc_next -> sel_next
 
 class Signal(int, Enum):
@@ -117,6 +118,7 @@ m_program = [
     0b1110000000010000000110000001000,
 ]
 
+
 class DataPath:
     stack_registers: List[int] = None
     stack_pointer = None
@@ -198,6 +200,7 @@ class DataPath:
     def alu_dec(self):
         self.result_alu -= 1
 
+
 class ControlUnit:
     program = None
 
@@ -206,6 +209,29 @@ class ControlUnit:
     data_path = None
 
     _tick = None
+
+    opcode_to_mp = {
+        Opcode.PUSH: 1,
+        Opcode.JMP: 4,
+        Opcode.JZ: 5,
+        Opcode.JNZ: 6,
+        Opcode.JS: 7,
+        Opcode.JNS: 8,
+        Opcode.CALL: 9,
+        Opcode.RET: 12,
+        Opcode.INPUT: 14,
+        Opcode.OUTPUT: 17,
+        Opcode.POP: 18,
+        Opcode.SWAP: 20,
+        Opcode.ADD: 22,
+        Opcode.SUB: 25,
+        Opcode.MUL: 28,
+        Opcode.DIV: 31,
+        Opcode.INC: 34,
+        Opcode.DEC: 37,
+        Opcode.LOAD: 40,
+        Opcode.STORE: 42
+    }
 
     def __init__(self, program, data_path):
         self.program = program
@@ -218,6 +244,7 @@ class ControlUnit:
 
     def current_tick(self):
         return self._tick
+
 
 
 def simulation(code, input_tokens, data_memory_size, limit):
