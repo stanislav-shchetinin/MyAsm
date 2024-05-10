@@ -110,8 +110,8 @@ m_program = [
     0b1100001000010000100001000100,
     0b1110000000010000000110100100000,
     # load
-    0b1000001000100001000011,
-    0b1110000000010000000110100100000,
+    0b1000000000100001000011,
+    0b1110000000010001000110100100100,
     # store
     0b1110000000010000000110000001000,
 ]
@@ -121,9 +121,8 @@ class DataPath:
     stack_registers: List[int] = None
     stack_pointer = None
     swap_register = None
-    tos = None
+    tos: int = None
     data_memory: List[int] = None
-    io_controller = None
     result_alu = None
     cu_arg = None
     io_ports: Dict[int, List[str]] = None
@@ -143,11 +142,11 @@ class DataPath:
     def latch_sp(self, sel: List[Signal]):
 
         if Signal.SEL_SP_NEXT in sel:
-            self.stack_pointer += 1
             assert self.stack_pointer < len(self.stack_registers), "stack capacity exceeded"
+            self.stack_pointer += 1
         elif Signal.SEL_SP_PREV in sel:
+            assert self.stack_pointer >= 0, "a negative stack pointer was received"
             self.stack_pointer -= 1
-            assert self.stack_pointer < 0, "a negative stack pointer was received"
 
     def latch_swr(self):
         self.swap_register = self.tos
@@ -166,8 +165,9 @@ class DataPath:
             self.tos = self.data_memory[self.__top_stack_regs()]
         elif Signal.SEL_TOS_INPUT in sel:
             buffer = self.io_ports[self.cu_arg]
-            assert buffer, "attempt to read an empty buffer"
-            self.tos = buffer[0]
+            if not buffer:
+                raise EOFError()
+            self.tos = ord(buffer[0])
             buffer.pop()
 
     def write_dm(self):
@@ -177,8 +177,11 @@ class DataPath:
         assert self.cu_arg in self.io_ports, "Invalid port"
         self.io_ports[self.cu_arg].append(chr(self.tos))
 
-    def latch_sreg(self):
-        self.stack_registers[self.stack_pointer] = self.tos
+    def latch_sreg(self, sel: List[Signal]):
+        if Signal.SEL_SREG_TOS in sel:
+            self.stack_registers[self.stack_pointer] = self.tos
+        elif Signal.SEL_SREG_SWR in sel:
+            self.stack_registers[self.stack_pointer] = self.swap_register
 
     def alu_add(self):
         self.result_alu = self.tos + self.__top_stack_regs()
@@ -275,6 +278,11 @@ class ControlUnit:
                 or Signal.SEL_JZ in sel and tos == 0 \
                 or Signal.SEL_JNZ in sel and tos != 0:
             sel.append(Signal.SEL_JMP)
+        elif Signal.SEL_JS in sel \
+                or Signal.SEL_JNS in sel \
+                or Signal.SEL_JZ in sel \
+                or Signal.SEL_JNZ in sel:
+            sel.append(Signal.SEL_NEXT)
 
         # Second MUX
         if Signal.SEL_JMP in sel:
@@ -291,6 +299,8 @@ class ControlUnit:
         elif Signal.SEL_MPC_NEXT in sel:
             self.mpc += 1
         elif Signal.SEL_MPC_OPCODE in sel:
+            if Opcode.HLT is Opcode(self.program[self.pc]["opcode"]):
+                raise StopIteration()
             self.mpc = self.opcode_to_mp[Opcode(self.program[self.pc]["opcode"])]
 
     def latch_scp(self, sel: List[Signal]):
@@ -308,20 +318,20 @@ class ControlUnit:
         signals = self.__int_to_list_signals(mprogram)
         if Signal.LATCH_SP in signals:
             self.data_path.latch_sp(signals)
-        if Signal.LATCH_TOS in signals:
-            self.data_path.latch_tos(signals)
         if Signal.LATCH_SWR in signals:
             self.data_path.latch_swr()
+        if Signal.LATCH_TOS in signals:
+            self.data_path.latch_tos(signals)
         if Signal.WRITE_DM in signals:
             self.data_path.write_dm()
         if Signal.WRITE_IO in signals:
             self.data_path.write_io()
         if Signal.LATCH_SREG in signals:
-            self.data_path.latch_sreg()
-        if Signal.LATCH_PC in signals:
-            self.latch_pc(signals)
+            self.data_path.latch_sreg(signals)
         if Signal.LATCH_MPC in signals:
             self.latch_mpc(signals)
+        if Signal.LATCH_PC in signals:
+            self.latch_pc(signals)
         if Signal.LATCH_SCP in signals:
             self.latch_scp(signals)
         if Signal.LATCH_CALLST in signals:
@@ -340,25 +350,28 @@ class ControlUnit:
             self.data_path.alu_dec()
 
 
-def simulation(code, data, input_tokens) -> (str, int, int):
+def simulation(code, data, input_tokens) -> (str, int):
     data_path = DataPath(data, 256, input_tokens)
     control_unit = ControlUnit(code, data_path, 1024)
-    instr_counter = 0
 
     # logging.debug("%s", control_unit)
     try:
         while True:
-            data_path.cu_arg = control_unit.program[control_unit.pc]["arg"]
+            if control_unit.mpc == 0:
+                data_path.cu_arg = control_unit.program[control_unit.pc]["arg"]
+                logging.info("opcode: %s\n", control_unit.program[control_unit.pc]["opcode"])
             mprogram = m_program[control_unit.mpc]
             control_unit.execute_microprogram(mprogram)
-            instr_counter += 1
+            control_unit.tick()
             # logging.debug("%s", control_unit)
+    except EOFError:
+        logging.warning("Input buffer is empty!")
     except StopIteration:
         pass
 
     output_buffer = data_path.io_ports[1]
     logging.info("output_buffer: %s", repr("".join(output_buffer)))
-    return "".join(output_buffer), instr_counter, control_unit.current_tick()
+    return "".join(output_buffer), control_unit.current_tick()
 
 
 def main(code_file, data_file, input_file):
@@ -370,14 +383,14 @@ def main(code_file, data_file, input_file):
         for char in input_text:
             input_token.append(char)
 
-    output, instr_counter, ticks = simulation(
+    output, ticks = simulation(
         code,
         data,
         input_token
     )
 
     print("".join(output))
-    print("instr_counter: ", instr_counter, "ticks:", ticks)
+    print("ticks:", ticks)
 
 
 if __name__ == "__main__":
