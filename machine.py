@@ -168,7 +168,7 @@ class DataPath:
             if not buffer:
                 raise EOFError()
             self.tos = ord(buffer[0])
-            buffer.pop()
+            self.io_ports[self.cu_arg] = self.io_ports[self.cu_arg][1:]
 
     def write_dm(self):
         self.data_memory[self.__top_stack_regs()] = self.tos
