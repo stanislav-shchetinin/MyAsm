@@ -20,7 +20,6 @@ output_str:
     cycle_out:
         load
         jz ext_out
-        pop
         output 1
         pop
         inc
