@@ -4,7 +4,7 @@
 
 import sys
 
-from isa import Opcode, write_code, write_data, read_data, read_code
+from isa import Opcode, write_code, write_data
 from typing import List, Dict, Union
 from itertools import chain
 

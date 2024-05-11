@@ -52,7 +52,6 @@ def bytes_to_int(byte_arr: bytes) -> int:
 
 
 def write_code(filename, code):
-    """Записать машинный код в файл."""
     with open(filename, "wb") as file:
         int_codes: List[int] = [(int(instr["opcode"]) << 24) + int(instr["arg"]) if "arg" in instr
                                 else (int(instr["opcode"]) << 24) for instr in code]

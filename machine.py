@@ -84,10 +84,10 @@ m_program = [
     0b1110000000010000000110010000001,
     # swap
     0b1000000100100000000110,
-    0b1110000000010000000100100100000,
+    0b1110000000010000000110100100000,
     # add
     0b1000000000100000000010,
-    0b10001000010000100001000100,
+    0b10001000010000100001000101,
     0b1110000000010000000110100100000,
     # sub
     0b1000000000100000000010,
@@ -95,19 +95,19 @@ m_program = [
     0b1110000000010000000110100100000,
     # mul
     0b1000000000100000000010,
-    0b110001000010000100001000100,
+    0b110001000010000100001000101,
     0b1110000000010000000110100100000,
     # div
     0b1000000000100000000010,
-    0b1000001000010000100001000100,
+    0b1000001000010000100001000101,
     0b1110000000010000000110100100000,
     # inc
     0b1000000000100000000010,
-    0b1010001000010000100001000100,
+    0b1010001000010000100001000101,
     0b1110000000010000000110100100000,
     # dec
     0b1000000000100000000010,
-    0b1100001000010000100001000100,
+    0b1100001000010000100001000101,
     0b1110000000010000000110100100000,
     # load
     0b1000000000100001000011,
@@ -309,13 +309,25 @@ class ControlUnit:
             assert self.scp < len(self.call_stack), "call stack capacity exceeded"
         elif Signal.SEL_SCP_PREV in sel:
             self.scp -= 1
-            assert self.scp < 0, "a negative scp was received"
+            assert self.scp >= 0, "a negative scp was received"
 
     def latch_callst(self):
         self.call_stack[self.scp] = self.pc + 1
 
     def execute_microprogram(self, mprogram: int):
         signals = self.__int_to_list_signals(mprogram)
+        if Signal.ALU_SUM in signals:
+            self.data_path.alu_add()
+        if Signal.ALU_SUB in signals:
+            self.data_path.alu_sub()
+        if Signal.ALU_MUL in signals:
+            self.data_path.alu_mul()
+        if Signal.ALU_DIV in signals:
+            self.data_path.alu_div()
+        if Signal.ALU_INC in signals:
+            self.data_path.alu_inc()
+        if Signal.ALU_DEC in signals:
+            self.data_path.alu_dec()
         if Signal.LATCH_SP in signals:
             self.data_path.latch_sp(signals)
         if Signal.LATCH_SWR in signals:
@@ -336,18 +348,6 @@ class ControlUnit:
             self.latch_scp(signals)
         if Signal.LATCH_CALLST in signals:
             self.latch_callst()
-        if Signal.ALU_SUM in signals:
-            self.data_path.alu_add()
-        if Signal.ALU_SUB in signals:
-            self.data_path.alu_sub()
-        if Signal.ALU_MUL in signals:
-            self.data_path.alu_mul()
-        if Signal.ALU_DIV in signals:
-            self.data_path.alu_div()
-        if Signal.ALU_INC in signals:
-            self.data_path.alu_inc()
-        if Signal.ALU_DEC in signals:
-            self.data_path.alu_dec()
 
 
 def simulation(code, data, input_tokens) -> (str, int):
