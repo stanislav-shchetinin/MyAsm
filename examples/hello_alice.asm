@@ -24,6 +24,8 @@ output_str:
         output 1
         pop
         inc
+        swap
+        pop
         jmp cycle_out
     ext_out:
         pop       ;удаляет 0
@@ -41,6 +43,8 @@ input_str:
         store     ; |top1|top2|...|last| - интерпретирует top2 как адрес и записывает по нему значение top1
         pop
         inc
+        swap
+        pop
         jmp cycle_in
 
     ext_in:
