@@ -197,10 +197,10 @@ class DataPath:
         self.result_alu = self.tos / self.top_stack_regs()
 
     def alu_inc(self):
-        self.result_alu += 1
+        self.result_alu = self.tos + 1
 
     def alu_dec(self):
-        self.result_alu -= 1
+        self.result_alu = self.tos - 1
 
 
 class ControlUnit:
@@ -353,7 +353,9 @@ class ControlUnit:
     def __repr__(self):
         state_repr = ("TICK: {:3} PC: {:3} MPC: {:3} TOS: {:3} SREG: {:3} SIZE_STACK: {:3}"
                       " ALU: {:3} SWR: {:3} ARG: {:3} CALL_STACK_TOP: {:3} SP: {}\n"
-                      "STACK: {}\nOUTPUT: {}\nDATA: {}").format(
+                      "STACK: {}\nOUTPUT: {}\nDATA: {}"
+                      "\n-------------------------------------------------------------------------------------"
+                      ).format(
             self._tick,
             self.pc,
             self.mpc,
@@ -419,7 +421,8 @@ def main(code_file, data_file, input_file):
 
 
 if __name__ == "__main__":
-    logging.getLogger().setLevel(logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, filename="logs/machine.log", filemode="w")
+
     assert len(sys.argv) == 4, "Wrong arguments: machine.py <data_file> <code_file> <input_file>"
     _, data_file, code_file, input_file = sys.argv
     main(code_file, data_file, input_file)

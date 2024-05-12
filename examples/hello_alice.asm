@@ -1,5 +1,5 @@
 .data
-question: "What is your name?", 0
+question: "What is your name?", 10, 0
 hello_str: "Hello, ", 0
 buffer: res 256
 
