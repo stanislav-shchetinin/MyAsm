@@ -184,11 +184,11 @@ def translate_stage_1(text: List[str]) -> (Dict[str, int], List[Dict[str, Union[
             assert len(sub_tokens) == 2, "Invalid instruction: {}".format(token)
             mnemonic, arg = sub_tokens
             opcode = name2opcode().get(mnemonic)
-            assert opcode in cmd_with_args(), "{} must have one argument".format(opcode)
+            assert opcode in cmd_with_args(), "{} must have zero argument".format(Opcode(opcode).name)
             code.append({"index": pc, "opcode": opcode, "arg": arg})
         else:  # токен содержит инструкцию без операндов
             opcode = name2opcode().get(token)
-            assert opcode not in cmd_with_args(), '{} must have zero argument'.format(opcode)
+            assert opcode not in cmd_with_args(), '{} must have one argument'.format(Opcode(opcode).name)
             code.append({"index": pc, "opcode": opcode})
 
     return labels, code

@@ -176,6 +176,7 @@ class DataPath:
 
     def write_io(self):
         assert self.cu_arg in self.io_ports, "Invalid port"
+        print(self.tos)
         self.io_ports[self.cu_arg].append(chr(self.tos))
 
     def latch_sreg(self, sel: List[Signal]):
