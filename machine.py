@@ -176,7 +176,6 @@ class DataPath:
 
     def write_io(self):
         assert self.cu_arg in self.io_ports, "Invalid port"
-        print(self.tos)
         self.io_ports[self.cu_arg].append(chr(self.tos))
 
     def latch_sreg(self, sel: List[Signal]):
@@ -195,7 +194,7 @@ class DataPath:
         self.result_alu = self.tos * self.top_stack_regs()
 
     def alu_div(self):
-        self.result_alu = self.tos / self.top_stack_regs()
+        self.result_alu = self.tos // self.top_stack_regs()
 
     def alu_inc(self):
         self.result_alu = self.tos + 1
@@ -377,9 +376,8 @@ class ControlUnit:
 
 
 def simulation(code, data, input_tokens) -> (str, int):
-    data_path = DataPath(data, 8, input_tokens)
-    control_unit = ControlUnit(code, data_path, 8)
-
+    data_path = DataPath(data, 24, input_tokens)
+    control_unit = ControlUnit(code, data_path, 16)
     logging.debug("%s", control_unit)
     try:
         while True:

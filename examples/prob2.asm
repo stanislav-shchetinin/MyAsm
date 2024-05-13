@@ -52,43 +52,18 @@ _main:
         pop
         pop
         pop
-        output 1
+        push -1
+        swap
+        call digits_on_stack
+        call print_int
         hlt
-
-cnt_digits:
-    push 0
-    add
-    swap
-    pop
-    push 10
-    swap
-    div
-    jz ext_cnt_digits
-    swap
-    pop
-    swap pop
-    push cnt
-    load
-    inc
-    swap
-    pop
-    store
-    pop
-    pop
-    jmp cnt_digits
-
-ext_cnt_digits:
-    pop
-    pop
-    pop
-    ret
 
 digits_on_stack:
     jz ext_digits_on_stack
     push 10
     swap
     div
-    push
+    push 10
     mul
     swap
     pop
@@ -97,10 +72,9 @@ digits_on_stack:
     swap
     sub
     swap
-    swap
     pop
     swap
-    pop
+    push 10
     swap
     div
     swap
@@ -110,20 +84,18 @@ digits_on_stack:
     jmp digits_on_stack
 
 ext_digits_on_stack:
+    pop
     ret
 
 print_int:
-    push cnt
-    load
-    jz ext_print_int
-    dec
-    swap
-    pop
-    store
-    pop
-    pop
+    js ext_print_int
+    push 48                 ; ascii '0'
+    add
     output 1
-    pop
+    pop                     ; result add
+    pop                     ; 48
+    pop                     ; digit
+    pop                     ; 10 - implementation detail
     jmp print_int
 
 ext_print_int:

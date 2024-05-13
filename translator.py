@@ -61,7 +61,7 @@ def get_integers(data: str, ind_chars_in_quotes: List[int]):
     int_data = [x if type(x) is list else int(x) for x in int_data]
     for x in int_data:
         if not (type(x) is list):
-            assert -(1 << 31) <= x <= (1 << 31) - 1, "Integer must take values in the segment [-2^31; 2^31 - 1]"
+            assert -(1 << 23) <= x <= (1 << 23) - 1, "Integer must take values in the segment [-2^23; 2^23 - 1]"
     return int_data
 
 
@@ -226,12 +226,14 @@ def is_number(s: str) -> bool:
     return s.isdigit() or (s[1::].isdigit() and s[0] in {'+', '-'})
 
 
-def replace_push_arg(code: List[Dict[str, Union[Opcode, str, None, int]]], labels2data: Dict[str, List[int]])\
+def replace_push_arg(code: List[Dict[str, Union[Opcode, str, None, int]]], labels2data: Dict[str, List[int]]) \
         -> List[Dict[str, Union[Opcode, str, None, int]]]:
     labels2num: Dict[str, int] = get_labels_to_num(labels2data)
     for instruction in code:
         if instruction["opcode"] is Opcode.PUSH and not is_number(instruction["arg"]):
             instruction["arg"] = labels2num[instruction["arg"]]
+        elif instruction["opcode"] is Opcode.PUSH and is_number(instruction["arg"]):
+            instruction["arg"] = int(instruction["arg"])
     return code
 
 
