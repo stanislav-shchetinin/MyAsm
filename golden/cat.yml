@@ -1,0 +1,620 @@
+in_source: |
+  .text
+  _main:
+    cycle:
+      input 0   ;считать с порта 0
+      jz ext
+      output 1  ;вывести на порт 1
+      pop
+      jmp cycle
+    ext:
+      hlt
+
+in_stdin: |
+  1232fro
+out_code: !!binary |
+  AAAACQUAAAMBAAAKAAAAAQAAAAIAAAAU
+
+out_formatted_code: |
+  {'index': 0, 'opcode': <Opcode.INPUT: 9>, 'arg': 0}
+  {'index': 1, 'opcode': <Opcode.JZ: 3>, 'arg': 5}
+  {'index': 2, 'opcode': <Opcode.OUTPUT: 10>, 'arg': 1}
+  {'index': 3, 'opcode': <Opcode.POP: 1>, 'arg': 0}
+  {'index': 4, 'opcode': <Opcode.JMP: 2>, 'arg': 0}
+  {'index': 5, 'opcode': <Opcode.HLT: 20>, 'arg': 0}
+
+out_data: !!binary |
+
+out_formatted_data: |
+
+out_stdout: |
+  source LoC: 11 code instr: 6
+  ============================================================
+  1232fro
+
+  ticks: 107
+
+out_log: |
+  DEBUG   machine:simulation    TICK:   0 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK:   1 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   2 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   3 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   4 PC:   1 MPC:   0 TOS:  49 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 1
+  DEBUG   machine:simulation    TICK:   5 PC:   1 MPC:   5 TOS:  49 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   6 PC:   2 MPC:   0 TOS:  49 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 2
+  DEBUG   machine:simulation    TICK:   7 PC:   2 MPC:  17 TOS:  49 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   8 PC:   3 MPC:   0 TOS:  49 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 3
+  DEBUG   machine:simulation    TICK:   9 PC:   3 MPC:  18 TOS:  49 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  10 PC:   3 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  11 PC:   4 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 4
+  DEBUG   machine:simulation    TICK:  12 PC:   4 MPC:   4 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  13 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK:  14 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  15 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  16 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  17 PC:   1 MPC:   0 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 1
+  DEBUG   machine:simulation    TICK:  18 PC:   1 MPC:   5 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  19 PC:   2 MPC:   0 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 2
+  DEBUG   machine:simulation    TICK:  20 PC:   2 MPC:  17 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  21 PC:   3 MPC:   0 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 3
+  DEBUG   machine:simulation    TICK:  22 PC:   3 MPC:  18 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  23 PC:   3 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  24 PC:   4 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 4
+  DEBUG   machine:simulation    TICK:  25 PC:   4 MPC:   4 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  26 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK:  27 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  28 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  29 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  30 PC:   1 MPC:   0 TOS:  51 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 1
+  DEBUG   machine:simulation    TICK:  31 PC:   1 MPC:   5 TOS:  51 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  32 PC:   2 MPC:   0 TOS:  51 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 2
+  DEBUG   machine:simulation    TICK:  33 PC:   2 MPC:  17 TOS:  51 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  34 PC:   3 MPC:   0 TOS:  51 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 3
+  DEBUG   machine:simulation    TICK:  35 PC:   3 MPC:  18 TOS:  51 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  36 PC:   3 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  37 PC:   4 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 4
+  DEBUG   machine:simulation    TICK:  38 PC:   4 MPC:   4 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  39 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK:  40 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  41 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  42 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  43 PC:   1 MPC:   0 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 1
+  DEBUG   machine:simulation    TICK:  44 PC:   1 MPC:   5 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  45 PC:   2 MPC:   0 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 2
+  DEBUG   machine:simulation    TICK:  46 PC:   2 MPC:  17 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  47 PC:   3 MPC:   0 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 3
+  DEBUG   machine:simulation    TICK:  48 PC:   3 MPC:  18 TOS:  50 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  49 PC:   3 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  50 PC:   4 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 4
+  DEBUG   machine:simulation    TICK:  51 PC:   4 MPC:   4 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  52 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK:  53 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  54 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  55 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  56 PC:   1 MPC:   0 TOS: 102 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 1
+  DEBUG   machine:simulation    TICK:  57 PC:   1 MPC:   5 TOS: 102 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  58 PC:   2 MPC:   0 TOS: 102 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 2
+  DEBUG   machine:simulation    TICK:  59 PC:   2 MPC:  17 TOS: 102 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  60 PC:   3 MPC:   0 TOS: 102 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 3
+  DEBUG   machine:simulation    TICK:  61 PC:   3 MPC:  18 TOS: 102 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  62 PC:   3 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  63 PC:   4 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 4
+  DEBUG   machine:simulation    TICK:  64 PC:   4 MPC:   4 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  65 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK:  66 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  67 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  68 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  69 PC:   1 MPC:   0 TOS: 114 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 1
+  DEBUG   machine:simulation    TICK:  70 PC:   1 MPC:   5 TOS: 114 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  71 PC:   2 MPC:   0 TOS: 114 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 2
+  DEBUG   machine:simulation    TICK:  72 PC:   2 MPC:  17 TOS: 114 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  73 PC:   3 MPC:   0 TOS: 114 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 3
+  DEBUG   machine:simulation    TICK:  74 PC:   3 MPC:  18 TOS: 114 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  75 PC:   3 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  76 PC:   4 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 4
+  DEBUG   machine:simulation    TICK:  77 PC:   4 MPC:   4 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  78 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK:  79 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  80 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  81 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  82 PC:   1 MPC:   0 TOS: 111 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 1
+  DEBUG   machine:simulation    TICK:  83 PC:   1 MPC:   5 TOS: 111 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  84 PC:   2 MPC:   0 TOS: 111 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 2
+  DEBUG   machine:simulation    TICK:  85 PC:   2 MPC:  17 TOS: 111 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  86 PC:   3 MPC:   0 TOS: 111 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 3
+  DEBUG   machine:simulation    TICK:  87 PC:   3 MPC:  18 TOS: 111 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  88 PC:   3 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  89 PC:   4 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 4
+  DEBUG   machine:simulation    TICK:  90 PC:   4 MPC:   4 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  91 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK:  92 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  93 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  94 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  95 PC:   1 MPC:   0 TOS:  10 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 1
+  DEBUG   machine:simulation    TICK:  96 PC:   1 MPC:   5 TOS:  10 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  97 PC:   2 MPC:   0 TOS:  10 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   5 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 2
+  DEBUG   machine:simulation    TICK:  98 PC:   2 MPC:  17 TOS:  10 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  99 PC:   3 MPC:   0 TOS:  10 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 3
+  DEBUG   machine:simulation    TICK: 100 PC:   3 MPC:  18 TOS:  10 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK: 101 PC:   3 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK: 102 PC:   4 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 4
+  DEBUG   machine:simulation    TICK: 103 PC:   4 MPC:   4 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK: 104 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INPUT, PC: 0
+  DEBUG   machine:simulation    TICK: 105 PC:   0 MPC:  14 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK: 106 PC:   0 MPC:  15 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK: 107 PC:   0 MPC:  16 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['1', '2', '3', '2', 'f', 'r', 'o', '\n']
+  DATA: []
+  -------------------------------------------------------------------------------------
+  WARNING machine:simulation    Input buffer is empty!
+  INFO    machine:simulation    output_buffer: '1232fro\n'

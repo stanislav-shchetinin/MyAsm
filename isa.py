@@ -87,5 +87,5 @@ def read_code(filename) -> List[Dict[str, int]]:
         arg = x & 0x00FFFFFF
         if arg > (1 << 23) - 1:
             arg -= 0x00FFFFFF
-        res.append({"index": num, "opcode": opcode, "arg": arg})
+        res.append({"index": num, "opcode": Opcode(opcode), "arg": arg})
     return res
