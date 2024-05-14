@@ -281,12 +281,13 @@ _main:
     cycle:
         load      ;загружаю на вершину стэка значение по адресу вершины стэка
         jz ext    ;если на вершине 0, то переход
-        pop       ;убрал ноль
         output 1  ;вывод по порту 1 (порт для вывода), 0 - порт для ввода
         pop       ;убрал букву
-        inc       ;увеличил на один адрес
+        inc
+        swap
+        pop
         jmp cycle ;безусловный переход
-    
+
     ext:
         hlt       ;завершение
 
@@ -297,30 +298,28 @@ _main:
 ```asm
 .text
 _main:
-    input 0
     cycle:
-        jz ext
         input 0   ;считать с порта 0
+        jz ext
         output 1  ;вывести на порт 1
         pop
         jmp cycle
     ext:
         hlt
-
 ```
 
 ### Hello, Alice!
 
 ``` asm
 .data
-question: "What is your name?", 0
+question: "What is your name?", 10, 0
 hello_str: "Hello, ", 0
 buffer: res 256
 
 .text
 _main:
     push question
-    call print_str ;выводит строку, адрес которой сейчас на вершине
+    call output_str ;выводит строку, адрес которой сейчас на вершине
     push buffer
     call input_str
     push hello_str
@@ -334,10 +333,11 @@ output_str:
     cycle_out:
         load
         jz ext_out
-        pop
         output 1
         pop
         inc
+        swap
+        pop
         jmp cycle_out
     ext_out:
         pop       ;удаляет 0
@@ -355,14 +355,17 @@ input_str:
         store     ; |top1|top2|...|last| - интерпретирует top2 как адрес и записывает по нему значение top1
         pop
         inc
+        swap
+        pop
         jmp cycle_in
-    
+
     ext_in:
         pop      ;удаление результата sub
         pop      ;удаление 10
         pop      ;удаление результата ввода (\n)
         pop      ;удаление текущего адреса в буффере
         ret
+
 
 ```
 
@@ -387,51 +390,46 @@ input_str:
 
 ```
 
-Когда происходит jmp в ext, машина находится в следующем состоянии:
-
-```
-     _____        _____
-0:  |     |      |     | 
-    |  8  |      | 34  |  <---- F_{n}
-    |_____|      |_____|
-                 |     |
-       ^         | 32  |  <---- промежуточный рез-т
-       |         |_____|
-       |         |     |
-                 |  2  |  <---- F_{n - 6}
-    F_{n - 3}    |_____|
-                 |     |
-                 | 10  |  <---- сумма на пред. шаге    
-                 |_____|
-
-```
-
 ``` asm
+.data
+buffer: 0
+cnt: 0
+
 .text
 _main:
     push 10
     push 2
-    push 0
+    push buffer
     push 8
-    store       ; 1 - адрес, по которому записано 8 
-    swap        ; поменять местами первые два элемента стэка
-    pop         ; удалить 0
+    store
+    swap
+    pop
 
     cycle:
         push 4
-        mul     ;переменожить два значения на верхушке стэка и результат положить наверх
+        mul
         swap
         pop
         swap
         pop
-        add     ;сложить два числа и результат на вершину
+        add
         push 4000000
         sub
         js ext
-        pop     ;удаляем результат sub
-        pop     ;удаляем 4000000
-        push 0
+        pop
+        pop
+        swap
+        pop
+        swap
+        pop
+        swap
+        add
+        swap
+        pop
+        swap
+        push buffer
         load
+        swap
         pop
         swap
         push 0
@@ -439,30 +437,60 @@ _main:
         store
         swap
         pop
-        pop
-        swap
-        pop
-        swap
-        pop
-        swap
-        push 0
-        load
-        swap
-        pop
-        add
-        swap
-        pop
-        swap
-        pop
-        swap
-        push 0
-        load
-        swap pop
         jmp cycle
+
     ext:
         pop
         pop
         pop
-        output 1
+        pop
+        pop
+        push -1
+        swap
+        call digits_on_stack
+        call print_int
         hlt
+
+digits_on_stack:
+    jz ext_digits_on_stack
+    push 10
+    swap
+    div
+    push 10
+    mul
+    swap
+    pop
+    swap
+    pop
+    swap
+    sub
+    swap
+    pop
+    swap
+    push 10
+    swap
+    div
+    swap
+    pop
+    swap
+    pop
+    jmp digits_on_stack
+
+ext_digits_on_stack:
+    pop
+    ret
+
+print_int:
+    js ext_print_int
+    push 48                 ; ascii '0'
+    add
+    output 1
+    pop                     ; result add
+    pop                     ; 48
+    pop                     ; digit
+    pop                     ; 10 - implementation detail
+    jmp print_int
+
+ext_print_int:
+    ret
 ```
