@@ -41,7 +41,7 @@ def remove_double_comma(s: str) -> str:
     return new_s
 
 
-def make_reservation(data):
+def make_reservation(data) -> str:
     for i in range(len(data)):
         if "res" in data[i]:
             cnt = int(data[i].replace("res", ""))
@@ -49,7 +49,7 @@ def make_reservation(data):
     return data
 
 
-def get_integers(data: str, ind_chars_in_quotes: list[int]):
+def get_integers(data: str, ind_chars_in_quotes: list[int]) -> list[list[int] | int]:
     int_data = remove(data, ind_chars_in_quotes)
     # Могут появиться после удаления две запятые подряд - их надо почистить
     int_data = remove_double_comma(int_data)
@@ -65,11 +65,11 @@ def get_integers(data: str, ind_chars_in_quotes: list[int]):
     return int_data
 
 
-def str2list_int(data: str) -> (list[list[int] | int], list[int]):
+def str2list_int(data: str) -> (list[list[int]], list[int]):
     in_quotes: bool = False
     # Массив, в котором хранятся индексы элементов, взятых в кавычки (включая кавычки)
     # Нужен, чтобы после первого прохода по данным в метке, очистить данные от строк
-    ind_chars_in_quotes: list[int] = [[]]
+    ind_chars_in_quotes: list[int] = []
     # Массив, в котором элемент является List[int] длины строки,
     # если в исходном тексте на этом месте была строка (каждый int это код элемента в ASCII),
     # или длины 1, если в исходном тексте это было просто число
@@ -170,8 +170,10 @@ def get_meaningful_token(line: str) -> str:
     return line.split(";", 1)[0].strip()
 
 
-def translate_stage_1(text: list[str]) -> (dict[str, int], list[dict[str, Opcode | str]]):
-    code: list[dict[str, Opcode | str]] = []
+def translate_stage_1(text: list[str]) -> (dict[str, int], list[dict[str, Opcode | str | int]]):
+    # аргументом может быть или лейбл, или число
+    # Opcode - в параметре опкода
+    code: list[dict[str, Opcode | str | int]] = []
     labels: dict[str, int] = {}
     num_str_decl_section: int = find_substring_row(text, ".text")
     for ind in range(num_str_decl_section + 1, len(text)):
@@ -200,7 +202,7 @@ def translate_stage_1(text: list[str]) -> (dict[str, int], list[dict[str, Opcode
     return labels, code
 
 
-def translate_stage_2(labels: dict[str, int], code: list[dict[str, str | int]]):
+def translate_stage_2(labels: dict[str, int], code: list[dict[str, Opcode | str | int]]):
     for instruction in code:
         if "arg" in instruction:
             if instruction["opcode"] in {Opcode.INPUT, Opcode.OUTPUT, Opcode.PUSH}:
