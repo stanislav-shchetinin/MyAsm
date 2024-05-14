@@ -255,7 +255,7 @@ def main(source_file, target_data_file, target_program_file):
 
 
 if __name__ == "__main__":
-    assert len(sys.argv) == 4, ("Wrong arguments: translator_asm.py <input_file> <target_data_file> "
+    assert len(sys.argv) == 4, ("Wrong arguments: translator.py <input_file> <target_data_file> "
                                 "<target_program_file>")
     _, source_file, target_data_file, target_program_file = sys.argv
     main(source_file, target_data_file, target_program_file)
