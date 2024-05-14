@@ -148,7 +148,7 @@ def name2opcode() -> dict[str, Opcode]:
         "load": Opcode.LOAD,
         "store": Opcode.STORE,
         "swap": Opcode.SWAP,
-        "hlt": Opcode.HLT
+        "hlt": Opcode.HLT,
     }
 
 
@@ -162,7 +162,7 @@ def cmd_with_args():
         Opcode.JNS,
         Opcode.CALL,
         Opcode.INPUT,
-        Opcode.OUTPUT
+        Opcode.OUTPUT,
     }
 
 
@@ -232,8 +232,9 @@ def is_number(s: str) -> bool:
     return s.isdigit() or (s[1::].isdigit() and s[0] in {"+", "-"})
 
 
-def replace_push_arg(code: list[dict[str, Opcode | str | int]], labels2data: dict[str, list[int]]) \
-        -> list[dict[str, Opcode | int]]:
+def replace_push_arg(
+    code: list[dict[str, Opcode | str | int]], labels2data: dict[str, list[int]]
+) -> list[dict[str, Opcode | int]]:
     labels2num: dict[str, int] = get_labels_to_num(labels2data)
     for instruction in code:
         if instruction["opcode"] is Opcode.PUSH and not is_number(instruction["arg"]):
@@ -261,7 +262,6 @@ def main(source_file, target_data_file, target_program_file):
 
 
 if __name__ == "__main__":
-    assert len(sys.argv) == 4, ("Wrong arguments: translator.py <input_file> <target_data_file> "
-                                "<target_program_file>")
+    assert len(sys.argv) == 4, "Wrong arguments: translator.py <input_file> <target_data_file> " "<target_program_file>"
     _, source_file, target_data_file, target_program_file = sys.argv
     main(source_file, target_data_file, target_program_file)

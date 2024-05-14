@@ -53,8 +53,10 @@ def bytes_to_int(byte_arr: bytes) -> int:
 def write_code(filename, code):
     with open(filename, "wb") as file:
         int_codes: list[int] = [
-            (int(instr["opcode"]) << 24) + (int(instr["arg"]) + 0x00FFFFFF) % 0x00FFFFFF if "arg" in instr
-            else (int(instr["opcode"]) << 24) for instr in code
+            (int(instr["opcode"]) << 24) + (int(instr["arg"]) + 0x00FFFFFF) % 0x00FFFFFF
+            if "arg" in instr
+            else (int(instr["opcode"]) << 24)
+            for instr in code
         ]
         for x in int_codes:
             file.write(int_to_bytes(x))
@@ -73,7 +75,7 @@ def read_data(filename) -> list[int]:
         byte_content = file.read()
         ind = 0
         while ind < len(byte_content):
-            res.append(bytes_to_int(byte_content[ind:ind + 4]))
+            res.append(bytes_to_int(byte_content[ind : ind + 4]))
             ind += 4
     return res
 

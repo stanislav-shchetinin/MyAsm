@@ -11,40 +11,40 @@ from isa import Opcode, read_code, read_data
 
 class Signal(int, Enum):
     LATCH_SP = 1
-    LATCH_SWR = (1 << 1)
-    LATCH_TOS = (1 << 2)
-    WRITE_DM = (1 << 3)
-    WRITE_IO = (1 << 4)
-    LATCH_SREG = (1 << 5)
-    SEL_SP_NEXT = (1 << 6)
-    SEL_SP_PREV = (1 << 7)
-    SEL_SREG_SWR = (1 << 8)
-    SEL_SREG_TOS = (1 << 9)
-    LATCH_PC = (1 << 10)
-    LATCH_MPC = (1 << 11)
-    LATCH_SCP = (1 << 12)
-    LATCH_CALLST = (1 << 13)
-    SEL_TOS_SREG = (1 << 14)
-    SEL_TOS_DATA_MEM = (1 << 15)
-    SEL_TOS_ALU = (1 << 16)
-    SEL_TOS_INPUT = (1 << 17)
-    SEL_TOS_CU_ARG = (1 << 18)
-    SEL_MPC_ZERO = (1 << 19)
-    SEL_MPC_OPCODE = (1 << 20)
-    SEL_MPC_NEXT = (1 << 21)
-    SEL_SCP_NEXT = (1 << 22)
-    SEL_SCP_PREV = (1 << 23)
-    SEL_PC = (1 << 24)
-    ALU_SUM = (1 << 25)
-    ALU_SUB = (1 << 26)
+    LATCH_SWR = 1 << 1
+    LATCH_TOS = 1 << 2
+    WRITE_DM = 1 << 3
+    WRITE_IO = 1 << 4
+    LATCH_SREG = 1 << 5
+    SEL_SP_NEXT = 1 << 6
+    SEL_SP_PREV = 1 << 7
+    SEL_SREG_SWR = 1 << 8
+    SEL_SREG_TOS = 1 << 9
+    LATCH_PC = 1 << 10
+    LATCH_MPC = 1 << 11
+    LATCH_SCP = 1 << 12
+    LATCH_CALLST = 1 << 13
+    SEL_TOS_SREG = 1 << 14
+    SEL_TOS_DATA_MEM = 1 << 15
+    SEL_TOS_ALU = 1 << 16
+    SEL_TOS_INPUT = 1 << 17
+    SEL_TOS_CU_ARG = 1 << 18
+    SEL_MPC_ZERO = 1 << 19
+    SEL_MPC_OPCODE = 1 << 20
+    SEL_MPC_NEXT = 1 << 21
+    SEL_SCP_NEXT = 1 << 22
+    SEL_SCP_PREV = 1 << 23
+    SEL_PC = 1 << 24
+    ALU_SUM = 1 << 25
+    ALU_SUB = 1 << 26
     ALU_MUL = (1 << 25) + (1 << 26)
-    ALU_DIV = (1 << 27)
+    ALU_DIV = 1 << 27
     ALU_INC = (1 << 27) + (1 << 25)
     ALU_DEC = (1 << 27) + (1 << 26)
-    SEL_JMP = (1 << 28)
-    SEL_JS = (1 << 29)
+    SEL_JMP = 1 << 28
+    SEL_JS = 1 << 29
     SEL_JNS = (1 << 29) + (1 << 28)
-    SEL_JZ = (1 << 30)
+    SEL_JZ = 1 << 30
     SEL_JNZ = (1 << 30) + (1 << 28)
     SEL_RET = (1 << 30) + (1 << 29)
     SEL_NEXT = (1 << 30) + (1 << 29) + (1 << 28)
@@ -141,7 +141,6 @@ class DataPath:
             self.io_ports[num_port] = []
 
     def latch_sp(self, sel: list[Signal]):
-
         if Signal.SEL_SP_NEXT in sel:
             assert self.stack_pointer < len(self.stack_registers), "stack capacity exceeded"
             self.stack_pointer += 1
@@ -233,7 +232,7 @@ class ControlUnit:
         Opcode.INC: 34,
         Opcode.DEC: 37,
         Opcode.LOAD: 40,
-        Opcode.STORE: 42
+        Opcode.STORE: 42,
     }
 
     def __init__(self, program, data_path: DataPath, call_stack_capacity):
@@ -251,7 +250,7 @@ class ControlUnit:
 
         # add signals from latch_sp (0) to sel_pc (24)
         for i in range(25):
-            mask = (1 << i)
+            mask = 1 << i
             if (mc & mask) != 0:
                 signals.append(Signal(mask))
 
@@ -275,15 +274,18 @@ class ControlUnit:
         tos = self.data_path.tos
 
         # First MUX
-        if Signal.SEL_JS in sel and tos < 0 \
-                or Signal.SEL_JNS in sel and tos >= 0 \
-                or Signal.SEL_JZ in sel and tos == 0 \
-                or Signal.SEL_JNZ in sel and tos != 0:
+        if (
+            Signal.SEL_JS in sel
+            and tos < 0
+            or Signal.SEL_JNS in sel
+            and tos >= 0
+            or Signal.SEL_JZ in sel
+            and tos == 0
+            or Signal.SEL_JNZ in sel
+            and tos != 0
+        ):
             sel.append(Signal.SEL_JMP)
-        elif Signal.SEL_JS in sel \
-                or Signal.SEL_JNS in sel \
-                or Signal.SEL_JZ in sel \
-                or Signal.SEL_JNZ in sel:
+        elif Signal.SEL_JS in sel or Signal.SEL_JNS in sel or Signal.SEL_JZ in sel or Signal.SEL_JNZ in sel:
             sel.append(Signal.SEL_NEXT)
 
         # Second MUX
@@ -352,11 +354,12 @@ class ControlUnit:
             self.latch_callst()
 
     def __repr__(self):
-        return ("TICK: {:3} PC: {:3} MPC: {:3} TOS: {:3} SREG: {:3} SIZE_STACK: {:3}"
-                " ALU: {:3} SWR: {:3} ARG: {:3} CALL_STACK_TOP: {:3} SP: {}\n"
-                "STACK: {}\nOUTPUT: {}\nDATA: {}"
-                "\n-------------------------------------------------------------------------------------"
-                ).format(
+        return (
+            "TICK: {:3} PC: {:3} MPC: {:3} TOS: {:3} SREG: {:3} SIZE_STACK: {:3}"
+            " ALU: {:3} SWR: {:3} ARG: {:3} CALL_STACK_TOP: {:3} SP: {}\n"
+            "STACK: {}\nOUTPUT: {}\nDATA: {}"
+            "\n-------------------------------------------------------------------------------------"
+        ).format(
             self._tick,
             self.pc,
             self.mpc,
@@ -370,7 +373,7 @@ class ControlUnit:
             self.data_path.stack_pointer,
             self.data_path.stack_registers,
             self.data_path.io_ports[1],
-            self.data_path.data_memory
+            self.data_path.data_memory,
         )
 
 
@@ -382,9 +385,11 @@ def simulation(code, data, input_tokens) -> (str, int):
         while True:
             if control_unit.mpc == 0:
                 data_path.cu_arg = control_unit.program[control_unit.pc]["arg"]
-                logging.info("INSTRUCTION: %s, PC: %s",
-                             Opcode(control_unit.program[control_unit.pc]["opcode"]).name,
-                             control_unit.pc)
+                logging.info(
+                    "INSTRUCTION: %s, PC: %s",
+                    Opcode(control_unit.program[control_unit.pc]["opcode"]).name,
+                    control_unit.pc,
+                )
             mprogram = m_program[control_unit.mpc]
             control_unit.execute_microprogram(mprogram)
             control_unit.tick()
@@ -408,11 +413,7 @@ def main(code_file, data_file, input_file):
         for char in input_text:
             input_token.append(char)
 
-    output, ticks = simulation(
-        code,
-        data,
-        input_token
-    )
+    output, ticks = simulation(code, data, input_token)
 
     print("".join(output))
     print("ticks:", ticks)
