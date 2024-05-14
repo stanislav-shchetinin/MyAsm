@@ -1,4 +1,5 @@
-from typing import List, Dict
+from __future__ import annotations
+
 from enum import Enum
 
 
@@ -51,7 +52,7 @@ def bytes_to_int(byte_arr: bytes) -> int:
 
 def write_code(filename, code):
     with open(filename, "wb") as file:
-        int_codes: List[int] = [
+        int_codes: list[int] = [
             (int(instr["opcode"]) << 24) + (int(instr["arg"]) + 0x00FFFFFF) % 0x00FFFFFF if "arg" in instr
             else (int(instr["opcode"]) << 24) for instr in code
         ]
@@ -59,14 +60,14 @@ def write_code(filename, code):
             file.write(int_to_bytes(x))
 
 
-def write_data(filename, data: Dict[str, List[int]]):
+def write_data(filename, data: dict[str, list[int]]):
     with open(filename, "wb") as file:
         for arr in data.values():
             for x in arr:
                 file.write(int_to_bytes(x))
 
 
-def read_data(filename) -> List[int]:
+def read_data(filename) -> list[int]:
     res = []
     with open(filename, "rb") as file:
         byte_content = file.read()
@@ -77,7 +78,7 @@ def read_data(filename) -> List[int]:
     return res
 
 
-def read_code(filename) -> List[Dict[str, int]]:
+def read_code(filename) -> list[dict[str, int]]:
     arr_int = read_data(filename)
     res = []
     for num, x in enumerate(arr_int):

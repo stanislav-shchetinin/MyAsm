@@ -1,11 +1,12 @@
 #!/usr/bin/python3
+from __future__ import annotations
 
 import logging
 import sys
+from enum import Enum
+from typing import ClassVar
 
 from isa import Opcode, read_code, read_data
-from enum import Enum
-from typing import List, Dict
 
 
 class Signal(int, Enum):
@@ -118,16 +119,16 @@ m_program = [
 
 
 class DataPath:
-    stack_registers: List[int] = None
+    stack_registers: list[int] = None
     stack_pointer = None
     swap_register = None
     tos: int = None
-    data_memory: List[int] = None
+    data_memory: list[int] = None
     result_alu = None
     cu_arg = None
-    io_ports: Dict[int, List[str]] = None
+    io_ports: dict[int, list[str]] = None
 
-    def __init__(self, data, stack_capacity, input_tokens: List[str]):
+    def __init__(self, data, stack_capacity, input_tokens: list[str]):
         self.data_memory = data
         self.stack_registers = [0] * stack_capacity
         self.stack_pointer = -1
@@ -139,7 +140,7 @@ class DataPath:
         for num_port in range(1, 16):  # count of ports is 16
             self.io_ports[num_port] = []
 
-    def latch_sp(self, sel: List[Signal]):
+    def latch_sp(self, sel: list[Signal]):
 
         if Signal.SEL_SP_NEXT in sel:
             assert self.stack_pointer < len(self.stack_registers), "stack capacity exceeded"
@@ -155,7 +156,7 @@ class DataPath:
     def top_stack_regs(self) -> int:
         return self.stack_registers[self.stack_pointer]
 
-    def latch_tos(self, sel: List[Signal]):
+    def latch_tos(self, sel: list[Signal]):
         if Signal.SEL_TOS_ALU in sel:
             self.tos = self.result_alu
         elif Signal.SEL_TOS_SREG in sel:
@@ -178,7 +179,7 @@ class DataPath:
         assert self.cu_arg in self.io_ports, "Invalid port"
         self.io_ports[self.cu_arg].append(chr(self.tos))
 
-    def latch_sreg(self, sel: List[Signal]):
+    def latch_sreg(self, sel: list[Signal]):
         if Signal.SEL_SREG_TOS in sel:
             self.stack_registers[self.stack_pointer] = self.tos
         elif Signal.SEL_SREG_SWR in sel:
@@ -212,7 +213,7 @@ class ControlUnit:
     scp = None
     _tick = None
 
-    opcode_to_mp = {
+    opcode_to_mp: ClassVar[dict[Opcode, int]] = {
         Opcode.PUSH: 1,
         Opcode.JMP: 4,
         Opcode.JZ: 5,
@@ -245,8 +246,8 @@ class ControlUnit:
         self._tick = 0
 
     @staticmethod
-    def __int_to_list_signals(mc: int) -> List[Signal]:
-        signals: List[Signal] = []
+    def __int_to_list_signals(mc: int) -> list[Signal]:
+        signals: list[Signal] = []
 
         # add signals from latch_sp (0) to sel_pc (24)
         for i in range(25):
@@ -270,7 +271,7 @@ class ControlUnit:
     def current_tick(self):
         return self._tick
 
-    def latch_pc(self, sel: List[Signal]):
+    def latch_pc(self, sel: list[Signal]):
         tos = self.data_path.tos
 
         # First MUX
@@ -294,7 +295,7 @@ class ControlUnit:
         elif Signal.SEL_NEXT in sel:
             self.pc += 1
 
-    def latch_mpc(self, sel: List[Signal]):
+    def latch_mpc(self, sel: list[Signal]):
         if Signal.SEL_MPC_ZERO in sel:
             self.mpc = 0
         elif Signal.SEL_MPC_NEXT in sel:
@@ -304,7 +305,7 @@ class ControlUnit:
                 raise StopIteration()
             self.mpc = self.opcode_to_mp[Opcode(self.program[self.pc]["opcode"])]
 
-    def latch_scp(self, sel: List[Signal]):
+    def latch_scp(self, sel: list[Signal]):
         if Signal.SEL_SCP_NEXT in sel:
             assert self.scp < len(self.call_stack), "call stack capacity exceeded"
             self.scp += 1
@@ -315,7 +316,7 @@ class ControlUnit:
     def latch_callst(self):
         self.call_stack[self.scp] = self.pc + 1
 
-    def execute_microprogram(self, mprogram: int):
+    def execute_microprogram(self, mprogram: int):  # noqa: C901
         signals = self.__int_to_list_signals(mprogram)
         if Signal.ALU_SUM in signals:
             self.data_path.alu_add()
@@ -351,11 +352,11 @@ class ControlUnit:
             self.latch_callst()
 
     def __repr__(self):
-        state_repr = ("TICK: {:3} PC: {:3} MPC: {:3} TOS: {:3} SREG: {:3} SIZE_STACK: {:3}"
-                      " ALU: {:3} SWR: {:3} ARG: {:3} CALL_STACK_TOP: {:3} SP: {}\n"
-                      "STACK: {}\nOUTPUT: {}\nDATA: {}"
-                      "\n-------------------------------------------------------------------------------------"
-                      ).format(
+        return ("TICK: {:3} PC: {:3} MPC: {:3} TOS: {:3} SREG: {:3} SIZE_STACK: {:3}"
+                " ALU: {:3} SWR: {:3} ARG: {:3} CALL_STACK_TOP: {:3} SP: {}\n"
+                "STACK: {}\nOUTPUT: {}\nDATA: {}"
+                "\n-------------------------------------------------------------------------------------"
+                ).format(
             self._tick,
             self.pc,
             self.mpc,
@@ -371,8 +372,6 @@ class ControlUnit:
             self.data_path.io_ports[1],
             self.data_path.data_memory
         )
-
-        return state_repr
 
 
 def simulation(code, data, input_tokens) -> (str, int):
@@ -403,7 +402,7 @@ def simulation(code, data, input_tokens) -> (str, int):
 def main(code_file, data_file, input_file):
     code = read_code(code_file)
     data = read_data(data_file)
-    with open(input_file, encoding="utf-8", errors='ignore') as file:
+    with open(input_file, encoding="utf-8") as file:
         input_text = file.read()
         input_token = []
         for char in input_text:
@@ -420,8 +419,6 @@ def main(code_file, data_file, input_file):
 
 
 if __name__ == "__main__":
-    # logging.basicConfig(level=logging.DEBUG, filename="logs/machine.log", filemode="w")
-
     assert len(sys.argv) == 4, "Wrong arguments: machine.py <data_file> <code_file> <input_file>"
     _, data_file, code_file, input_file = sys.argv
     main(code_file, data_file, input_file)
