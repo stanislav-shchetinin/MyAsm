@@ -254,7 +254,7 @@ def translate(text: str) -> (dict[str, list[int]], list[dict[str, Opcode | int]]
 
 
 def main(source_file, target_data_file, target_program_file):
-    with open(source_file, encoding="utf-8", errors="ignore") as f:
+    with open(source_file, encoding="utf-8") as f:
         source = f.read()
 
     data, code = translate(source)
