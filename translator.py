@@ -245,7 +245,7 @@ def translate(text: str) -> (Dict[str, List[int]], List[Dict[str, Union[Opcode, 
 
 
 def main(source_file, target_data_file, target_program_file):
-    with open(source_file, encoding="utf-8") as f:
+    with open(source_file, encoding="utf-8", errors='ignore') as f:
         source = f.read()
 
     data, code = translate(source)

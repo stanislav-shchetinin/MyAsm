@@ -403,7 +403,7 @@ def simulation(code, data, input_tokens) -> (str, int):
 def main(code_file, data_file, input_file):
     code = read_code(code_file)
     data = read_data(data_file)
-    with open(input_file, encoding="utf-8") as file:
+    with open(input_file, encoding="utf-8", errors='ignore') as file:
         input_text = file.read()
         input_token = []
         for char in input_text:
