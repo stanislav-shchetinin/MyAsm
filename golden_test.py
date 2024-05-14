@@ -7,7 +7,6 @@ import tempfile
 import machine
 import pytest
 import translator
-from isa import read_code, read_data
 
 
 @pytest.mark.golden_test("golden/*.yml")
