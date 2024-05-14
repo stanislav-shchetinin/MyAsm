@@ -21,6 +21,7 @@ in_source: |
 
 in_stdin: |
 
+
 out_code: !!binary |
   AAAAAAAAABEJAAADAQAACgAAAAEAAAALAAAAEwAAAAEBAAACAAAAFA==
 

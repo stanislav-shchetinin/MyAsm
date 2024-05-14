@@ -12,6 +12,7 @@ in_source: |
 
 in_stdin: |
   1232fro
+
 out_code: !!binary |
   AAAACQUAAAMBAAAKAAAAAQAAAAIAAAAU
 

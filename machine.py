@@ -420,7 +420,7 @@ def main(code_file, data_file, input_file):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, filename="logs/machine.log", filemode="w")
+    # logging.basicConfig(level=logging.DEBUG, filename="logs/machine.log", filemode="w")
 
     assert len(sys.argv) == 4, "Wrong arguments: machine.py <data_file> <code_file> <input_file>"
     _, data_file, code_file, input_file = sys.argv

@@ -31,13 +31,13 @@ def test_translator_asm_and_machine(golden, caplog):
             print("============================================================")
             machine.main(target_code, target_data, input_stream)
 
-        # with open(target_code, mode="rb") as file:
-        #     code = file.read()
-        #
-        # with open(target_data, mode="rb") as file:
-        #     data = file.read()
-        #
-        # assert data == golden.out["out_data"]
-        # assert code == golden.out["out_code"]
+        with open(target_code, mode="rb") as file:
+            code = file.read()
+
+        with open(target_data, mode="rb") as file:
+            data = file.read()
+
+        assert data == golden.out["out_data"]
+        assert code == golden.out["out_code"]
         assert stdout.getvalue() == golden.out["out_stdout"]
         assert caplog.text == golden.out["out_log"]

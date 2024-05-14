@@ -103,6 +103,7 @@ in_source: |
       ret
 
 in_stdin: |
+  
 
 out_code: !!binary |
   CgAAAAIAAAAAAAAACAAAAAAAABIAAAATAAAAAQQAAAAAAAAPAAAAEwAAAAEAAAATAAAAAQAAAA0A
