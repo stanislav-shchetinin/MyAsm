@@ -328,7 +328,7 @@ foo:
 Директория с тестами: [golden](./golden/)  
 Исполняемый файл: [golden_test.py](./golden_test.py)
 
-**CI:**
+### CI:
 
 ``` yml
 name: Python CI
@@ -374,7 +374,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
@@ -389,7 +389,9 @@ jobs:
         run: poetry run ruff check .
 ```
 
-### Hello, world
+### Отчет на примере Hello, world
+
+Исходный код:
 ```asm
 .data
 hello_str: "Hello, world!", 0
@@ -412,81 +414,300 @@ _main:
 
 ```
 
-### cat
+Отформатированные машинный код (человекочитаемый не бинарный вид):
 
-```asm
-.text
-_main:
-    cycle:
-        input 0   ;считать с порта 0
-        jz ext
-        output 1  ;вывести на порт 1
-        pop
-        jmp cycle
-    ext:
-        hlt
+``` python
+{'index': 0, 'opcode': <Opcode.PUSH: 0>, 'arg': 0}
+{'index': 1, 'opcode': <Opcode.LOAD: 17>, 'arg': 0}
+{'index': 2, 'opcode': <Opcode.JZ: 3>, 'arg': 9}
+{'index': 3, 'opcode': <Opcode.OUTPUT: 10>, 'arg': 1}
+{'index': 4, 'opcode': <Opcode.POP: 1>, 'arg': 0}
+{'index': 5, 'opcode': <Opcode.INC: 11>, 'arg': 0}
+{'index': 6, 'opcode': <Opcode.SWAP: 19>, 'arg': 0}
+{'index': 7, 'opcode': <Opcode.POP: 1>, 'arg': 0}
+{'index': 8, 'opcode': <Opcode.JMP: 2>, 'arg': 1}
+{'index': 9, 'opcode': <Opcode.HLT: 20>, 'arg': 0}
 ```
 
-### Hello, Alice!
-
-``` asm
-.data
-question: "What is your name?", 10, 0
-hello_str: "Hello, ", 0
-buffer: res 256
-
-.text
-_main:
-    push question
-    call output_str ;выводит строку, адрес которой сейчас на вершине
-    push buffer
-    call input_str
-    push hello_str
-    call output_str
-    push buffer
-    call output_str
-    hlt
-
-
-output_str:
-    cycle_out:
-        load
-        jz ext_out
-        output 1
-        pop
-        inc
-        swap
-        pop
-        jmp cycle_out
-    ext_out:
-        pop       ;удаляет 0
-        pop       ;удаляет адрес нуля
-        ret
-
-input_str:
-    cycle_in:
-        input 0
-        push 10  ;если введен символ перевода строки (ascii '\n' == 0x0A), то ввод завершается
-        sub
-        jz ext_in
-        pop       ;удаление результата sub
-        pop       ;удаление 10
-        store     ; |top1|top2|...|last| - интерпретирует top2 как адрес и записывает по нему значение top1
-        pop
-        inc
-        swap
-        pop
-        jmp cycle_in
-
-    ext_in:
-        pop      ;удаление результата sub
-        pop      ;удаление 10
-        pop      ;удаление результата ввода (\n)
-        pop      ;удаление текущего адреса в буффере
-        ret
-
+Отформатированные данные:
 
 ```
+[72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+```
+
+Журнал (не весь):
+
+```
+DEBUG   machine:simulation    TICK:   0 PC:   0 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: PUSH, PC: 0
+  DEBUG   machine:simulation    TICK:   1 PC:   0 MPC:   1 TOS:   0 SREG:   0 SIZE_STACK:   0 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: -1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   2 PC:   0 MPC:   2 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   3 PC:   0 MPC:   3 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   4 PC:   1 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: LOAD, PC: 1
+  DEBUG   machine:simulation    TICK:   5 PC:   1 MPC:  40 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   6 PC:   1 MPC:  41 TOS:   0 SREG:   0 SIZE_STACK:   2 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   7 PC:   2 MPC:   0 TOS:  72 SREG:   0 SIZE_STACK:   2 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 2
+  DEBUG   machine:simulation    TICK:   8 PC:   2 MPC:   5 TOS:  72 SREG:   0 SIZE_STACK:   2 ALU:   0 SWR:   0 ARG:   9 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:   9 PC:   3 MPC:   0 TOS:  72 SREG:   0 SIZE_STACK:   2 ALU:   0 SWR:   0 ARG:   9 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 3
+  DEBUG   machine:simulation    TICK:  10 PC:   3 MPC:  17 TOS:  72 SREG:   0 SIZE_STACK:   2 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: []
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  11 PC:   4 MPC:   0 TOS:  72 SREG:   0 SIZE_STACK:   2 ALU:   0 SWR:   0 ARG:   1 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 4
+  DEBUG   machine:simulation    TICK:  12 PC:   4 MPC:  18 TOS:  72 SREG:   0 SIZE_STACK:   2 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  13 PC:   4 MPC:  19 TOS:   0 SREG:   0 SIZE_STACK:   2 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  14 PC:   5 MPC:   0 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INC, PC: 5
+  DEBUG   machine:simulation    TICK:  15 PC:   5 MPC:  34 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  16 PC:   5 MPC:  35 TOS:   0 SREG:   0 SIZE_STACK:   1 ALU:   0 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  17 PC:   5 MPC:  36 TOS:   1 SREG:   0 SIZE_STACK:   2 ALU:   1 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  18 PC:   6 MPC:   0 TOS:   1 SREG:   0 SIZE_STACK:   2 ALU:   1 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: SWAP, PC: 6
+  DEBUG   machine:simulation    TICK:  19 PC:   6 MPC:  20 TOS:   1 SREG:   0 SIZE_STACK:   2 ALU:   1 SWR:   0 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  20 PC:   6 MPC:  21 TOS:   0 SREG:   0 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  21 PC:   7 MPC:   0 TOS:   0 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 7
+  DEBUG   machine:simulation    TICK:  22 PC:   7 MPC:  18 TOS:   0 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  23 PC:   7 MPC:  19 TOS:   1 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  24 PC:   8 MPC:   0 TOS:   1 SREG:   0 SIZE_STACK:   1 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 8
+  DEBUG   machine:simulation    TICK:  25 PC:   8 MPC:   4 TOS:   1 SREG:   0 SIZE_STACK:   1 ALU:   1 SWR:   1 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  26 PC:   1 MPC:   0 TOS:   1 SREG:   0 SIZE_STACK:   1 ALU:   1 SWR:   1 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: LOAD, PC: 1
+  DEBUG   machine:simulation    TICK:  27 PC:   1 MPC:  40 TOS:   1 SREG:   0 SIZE_STACK:   1 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  28 PC:   1 MPC:  41 TOS:   1 SREG:   0 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  29 PC:   2 MPC:   0 TOS: 101 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JZ, PC: 2
+  DEBUG   machine:simulation    TICK:  30 PC:   2 MPC:   5 TOS: 101 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   9 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  31 PC:   3 MPC:   0 TOS: 101 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   9 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: OUTPUT, PC: 3
+  DEBUG   machine:simulation    TICK:  32 PC:   3 MPC:  17 TOS: 101 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   1 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  33 PC:   4 MPC:   0 TOS: 101 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   1 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 4
+  DEBUG   machine:simulation    TICK:  34 PC:   4 MPC:  18 TOS: 101 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  35 PC:   4 MPC:  19 TOS:   1 SREG:   1 SIZE_STACK:   2 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  36 PC:   5 MPC:   0 TOS:   1 SREG:   0 SIZE_STACK:   1 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: INC, PC: 5
+  DEBUG   machine:simulation    TICK:  37 PC:   5 MPC:  34 TOS:   1 SREG:   0 SIZE_STACK:   1 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  38 PC:   5 MPC:  35 TOS:   1 SREG:   0 SIZE_STACK:   1 ALU:   1 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  39 PC:   5 MPC:  36 TOS:   2 SREG:   0 SIZE_STACK:   2 ALU:   2 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  40 PC:   6 MPC:   0 TOS:   2 SREG:   1 SIZE_STACK:   2 ALU:   2 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: SWAP, PC: 6
+  DEBUG   machine:simulation    TICK:  41 PC:   6 MPC:  20 TOS:   2 SREG:   1 SIZE_STACK:   2 ALU:   2 SWR:   1 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  42 PC:   6 MPC:  21 TOS:   1 SREG:   1 SIZE_STACK:   2 ALU:   2 SWR:   2 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  43 PC:   7 MPC:   0 TOS:   1 SREG:   2 SIZE_STACK:   2 ALU:   2 SWR:   2 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: POP, PC: 7
+  DEBUG   machine:simulation    TICK:  44 PC:   7 MPC:  18 TOS:   1 SREG:   2 SIZE_STACK:   2 ALU:   2 SWR:   2 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  45 PC:   7 MPC:  19 TOS:   2 SREG:   2 SIZE_STACK:   2 ALU:   2 SWR:   2 ARG:   0 CALL_STACK_TOP: EMPTY SP: 1
+  STACK: [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  46 PC:   8 MPC:   0 TOS:   2 SREG:   0 SIZE_STACK:   1 ALU:   2 SWR:   2 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: JMP, PC: 8
+  DEBUG   machine:simulation    TICK:  47 PC:   8 MPC:   4 TOS:   2 SREG:   0 SIZE_STACK:   1 ALU:   2 SWR:   2 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  DEBUG   machine:simulation    TICK:  48 PC:   1 MPC:   0 TOS:   2 SREG:   0 SIZE_STACK:   1 ALU:   2 SWR:   2 ARG:   1 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+  -------------------------------------------------------------------------------------
+  INFO    machine:simulation    INSTRUCTION: LOAD, PC: 1
+  DEBUG   machine:simulation    TICK:  49 PC:   1 MPC:  40 TOS:   2 SREG:   0 SIZE_STACK:   1 ALU:   2 SWR:   2 ARG:   0 CALL_STACK_TOP: EMPTY SP: 0
+  STACK: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  OUTPUT: ['H', 'e']
+  DATA: [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33, 0]
+```
+
+
 
 ### prob2
 Посчитать сумму четных чисел Фибоначчи до 4 миллионов.  
