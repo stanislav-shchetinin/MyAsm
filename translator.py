@@ -61,7 +61,7 @@ def get_integers(data: str, ind_chars_in_quotes: list[int]) -> list[list[int] | 
     int_data = [x if isinstance(x, list) else int(x) for x in int_data]
     for x in int_data:
         if not isinstance(x, list):
-            assert -(1 << 23) <= x <= (1 << 23) - 1, "Integer must take values in the segment [-2^23; 2^23 - 1]"
+            assert -(1 << 31) <= x <= (1 << 31) - 1, "Integer must take values in the segment [-2^31; 2^31 - 1]"
     return int_data
 
 
@@ -70,9 +70,9 @@ def str2list_int(data: str) -> (list[list[int]], list[int]):
     # Массив, в котором хранятся индексы элементов, взятых в кавычки (включая кавычки)
     # Нужен, чтобы после первого прохода по данным в метке, очистить данные от строк
     ind_chars_in_quotes: list[int] = []
-    # Массив, в котором элемент является List[int] длины строки,
-    # если в исходном тексте на этом месте была строка (каждый int это код элемента в ASCII),
-    # или длины 1, если в исходном тексте это было просто число
+    # Массив, в котором на i-ой позиции пустой массив, если на i-ой позиции в data
+    # был одиночный байт или резервация, иначе там была строка и этот массив
+    # -- последовательность байт строки
     list_codes: list[list[int]] = [[]]
     for index, x in enumerate(data):
         if x == '"':

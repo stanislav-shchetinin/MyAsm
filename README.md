@@ -231,7 +231,42 @@ foo:
 
 ## Транслятор
 
+Интерфейс командной строки: `python3 translator.py <input_file> <target_data_file> <target_program_file>`
+
+Первый аргумент - путь до файла с исходным кодом, второй аргумент - путь до файла, куда будут записаны массивы данных, инициализированные в пользовательской программе, в бианрном виде, третий аргумент - путь до файла, куда будут записаны инструкции в бинарном виде.  
+Немного видоизменил интерфейс командной строки в связи с Гарвардской архитектурой процессора.
+
+Реализация транслятора: [translator.py](./translator.py)
+
+Трансляция секции `.data`:
+- Реализована в `get_data`;
+- Сначала определяется место в коде, где объявлена секция `.data`;
+- Потом лейбл отделяется от данных;
+- В `get_codes_from_data` данные преобразуются в последовательность байт:
+  - Функция `str2list_int` возвращает массив, в котором строка представляется как массив байт, на позициях одиночных чисел и резервирования - пустые массивы;
+  - Функция `get_integers` удалят из данных строки возвращает массив одиночных чисел и резервированной памяти;
+  - Далее на пустые места вставляются одиночные числа и массивы резервирования
+  - В конце все данные выпрямляются в один итоговый массив
+  
+Трансляция секции `.text`:
+- `translate_stage_1`: инструкции разбиваются на токены, запоминаются номера лейблов. Возвращается высокоуровневая структура, описывающая инструкции;
+-`translate_stage_2`: в джампы подставляются номера инструкций в зависимости от лейбла;
+- `replace_push_arg`: в `psuh label` заменяются лейблы на адреса в памяти (т.к. Гарвардская архитектура, то 2 и 3 этапы разделены)
+- Код из высокоурвневой структуры переводится в бинарный вид в функции `write_code`, определенной в `isa.py`
+
+Правила:
+- Не более одного определения секций `.data` и `.text`
+- Одиночные числа, объявленные в `.data` должны принимать значения [-2^31; 2^31 - 1];
+- Лейбл в секции `.data` задается на той же строке, что и данные. Данные задаются на одной строке;
+- Лейбл в секции `.text` задается перед инструкцией, на которую он указывает;
+- На одной строке до одной инструкции;
+
 ## Модель процессора
+
+Интерфейс командной строки: `python3 machine.py <data_file> <code_file> <input_file>`
+
+Реализация: [machine.py](./machine.py)
+
 ### DataPath
 
 ![alt text](schemes/DataPath.svg "DataPath")
@@ -286,6 +321,73 @@ foo:
   - sel_jmp_type -- выбор перехода в соответсвии с микропрограммой и TOS (знак, ноль): `sel_jmp`, `sel_js`, `sel_jns`, `sel_jz`, `sel_jnz`, `sel_ret`, `sel_next`
   - sel_scp -- передвинуть указатель на позицию вверх или в низ в зависимости от операции (push/pop): `sel_scp_next`, `sel_scp_prev`
   - `sel_pc` -- выбор следующей команды
+
+## Тестирование
+
+Тестирование реализовано через golden тесты.  
+Директория с тестами: [golden](./golden/)  
+Исполняемый файл: [golden_test.py](./golden_test.py)
+
+**CI:**
+
+``` yml
+name: Python CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+
+      - name: Run tests and collect coverage
+        run: |
+          poetry run coverage run -m pytest .
+          poetry run coverage report -m
+        env:
+          CI: true
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+
+      - name: Check code formatting with Ruff
+        run: poetry run ruff format --check .
+
+      - name: Run Ruff linters
+        run: poetry run ruff check .
+```
 
 ### Hello, world
 ```asm
