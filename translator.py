@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-"""Транслятор Asm в машинный код.
-"""
 from __future__ import annotations
 
 import sys
