@@ -11,7 +11,7 @@ def find_substring_row(text: list[str], substr) -> int:
 
     for index, line in enumerate(text):
         if substr in line:
-            assert num_str_decl_section == -1, "Section .data can be declared at most once"
+            assert num_str_decl_section == -1, "Sections .data/.text can be declared at most once"
             num_str_decl_section = index
 
     return num_str_decl_section
@@ -240,6 +240,8 @@ def replace_push_arg(
             instruction["arg"] = labels2num[instruction["arg"]]
         elif instruction["opcode"] is Opcode.PUSH and is_number(instruction["arg"]):
             instruction["arg"] = int(instruction["arg"])
+            assert -(1 << 26) <= instruction["arg"] <= (1 << 26) - 1, ("Integer must take values in the segment ["
+                                                                       "-2^26; 2^26 - 1]")
     return code
 
 
