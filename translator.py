@@ -199,10 +199,24 @@ def translate_stage_1(text: list[str]) -> (dict[str, int], list[dict[str, Opcode
     return labels, code
 
 
-def translate_stage_2(labels: dict[str, int], code: list[dict[str, Opcode | str | int]]):
+def translate_stage_2(labels: dict[str, int], code: list[dict[str, Opcode | str | int]],
+                      labels2data: dict[str, list[int]]):
+    labels2num: dict[str, int] = get_labels_to_num(labels2data)
     for instruction in code:
         if "arg" in instruction:
-            if instruction["opcode"] in {Opcode.INPUT, Opcode.OUTPUT, Opcode.PUSH}:
+
+            if instruction["opcode"] in {Opcode.INPUT, Opcode.OUTPUT}:
+                assert 0 <= int(instruction["arg"]) <= 15, "Number of port must take values in the segment [0; 15]"
+                continue
+
+            if instruction["opcode"] is Opcode.PUSH:
+                if not is_number(instruction["arg"]):
+                    instruction["arg"] = labels2num[instruction["arg"]]
+                else:
+                    instruction["arg"] = int(instruction["arg"])
+                    assert -(1 << 26) <= instruction["arg"] <= (1 << 26) - 1, (
+                        "Integer must take values in the segment ["
+                        "-2^26; 2^26 - 1]")
                 continue
 
             label = instruction["arg"]
@@ -211,9 +225,9 @@ def translate_stage_2(labels: dict[str, int], code: list[dict[str, Opcode | str 
     return code
 
 
-def translate_code(text: list[str]) -> list[dict[str, Opcode | str | int]]:
+def translate_code(text: list[str], labels2data: dict[str, list[int]]) -> list[dict[str, Opcode | str | int]]:
     labels, code = translate_stage_1(text)
-    return translate_stage_2(labels, code)
+    return translate_stage_2(labels, code, labels2data)
 
 
 def get_labels_to_num(labels2data: dict[str, list[int]]) -> dict[str, int]:
@@ -231,24 +245,10 @@ def is_number(s: str) -> bool:
     return s.isdigit() or (s[1::].isdigit() and s[0] in {"+", "-"})
 
 
-def replace_push_arg(
-    code: list[dict[str, Opcode | str | int]], labels2data: dict[str, list[int]]
-) -> list[dict[str, Opcode | int]]:
-    labels2num: dict[str, int] = get_labels_to_num(labels2data)
-    for instruction in code:
-        if instruction["opcode"] is Opcode.PUSH and not is_number(instruction["arg"]):
-            instruction["arg"] = labels2num[instruction["arg"]]
-        elif instruction["opcode"] is Opcode.PUSH and is_number(instruction["arg"]):
-            instruction["arg"] = int(instruction["arg"])
-            assert -(1 << 26) <= instruction["arg"] <= (1 << 26) - 1, ("Integer must take values in the segment ["
-                                                                       "-2^26; 2^26 - 1]")
-    return code
-
-
 def translate(text: str) -> (dict[str, list[int]], list[dict[str, Opcode | int]]):
     text = text.splitlines()
     labels2data = get_data(text)
-    code = replace_push_arg(translate_code(text), labels2data)
+    code = translate_code(text, labels2data)
     return labels2data, code
 
 
