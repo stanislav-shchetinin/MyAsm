@@ -7,12 +7,11 @@ import tempfile
 import machine
 import pytest
 import translator
+from isa import (read_code, read_data)
 
 
 @pytest.mark.golden_test("golden/*.yml")
 def test_translator_asm_and_machine(golden, caplog):
-    """Почти полная копия test_translator_and_machine из golden_bf_test. Детали
-    см. там."""
     caplog.set_level(logging.DEBUG)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
@@ -37,7 +36,15 @@ def test_translator_asm_and_machine(golden, caplog):
         with open(target_data, mode="rb") as file:
             data = file.read()
 
+        formatted_code = ""
+        for x in read_code(target_code):
+            formatted_code += str(x) + "\n"
+
+        formatted_data = str(read_data(target_data))
+
         assert data == golden.out["out_data"]
         assert code == golden.out["out_code"]
+        assert formatted_code == golden.out["out_formatted_code"]
+        assert formatted_data == golden.out["out_formatted_data"]
         assert stdout.getvalue() == golden.out["out_stdout"]
         assert caplog.text == golden.out["out_log"]

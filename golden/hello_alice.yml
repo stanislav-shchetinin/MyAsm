@@ -57,12 +57,7 @@ in_source: |
 in_stdin: |
   Alice
 
-out_code: !!binary |
-  AAAAAAkAADgcAAAAFAAAOBQAAAAJAAA4HAAAAAkAADgAAACgAAAAiBEAABgBAABQAAAACAAAAFgA
-  AACYAAAACAkAABAAAAAIAAAACAAAAEAAAABICgAAAAAAAHAgAAAYAAAACAAAAAgAAACQAAAACAAA
-  AFgAAACYAAAACBQAABAAAAAIAAAACAAAAAgAAAAIAAAAQA==
-
-out_format_code: |
+out_formatted_code: |
   {'index': 0, 'opcode': <Opcode.PUSH: 0>, 'arg': 0}
   {'index': 1, 'opcode': <Opcode.CALL: 7>, 'arg': 9}
   {'index': 2, 'opcode': <Opcode.PUSH: 0>, 'arg': 28}
@@ -101,6 +96,14 @@ out_format_code: |
   {'index': 35, 'opcode': <Opcode.POP: 1>, 'arg': 0}
   {'index': 36, 'opcode': <Opcode.RET: 8>, 'arg': 0}
 
+out_formatted_data: |-
+  [87, 104, 97, 116, 32, 105, 115, 32, 121, 111, 117, 114, 32, 110, 97, 109, 101, 63, 10, 0, 72, 101, 108, 108, 111, 44, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+out_code: !!binary |
+  AAAAAAkAADgcAAAAFAAAOBQAAAAJAAA4HAAAAAkAADgAAACgAAAAiBEAABgBAABQAAAACAAAAFgA
+  AACYAAAACAkAABAAAAAIAAAACAAAAEAAAABICgAAAAAAAHAgAAAYAAAACAAAAAgAAACQAAAACAAA
+  AFgAAACYAAAACBQAABAAAAAIAAAACAAAAAgAAAAIAAAAQA==
+
 out_data: !!binary |
   VwAAAGgAAABhAAAAdAAAACAAAABpAAAAcwAAACAAAAB5AAAAbwAAAHUAAAByAAAAIAAAAG4AAABh
   AAAAbQAAAGUAAAA/AAAACgAAAAAAAABIAAAAZQAAAGwAAABsAAAAbwAAACwAAAAgAAAAAAAAAAAA
@@ -122,10 +125,6 @@ out_data: !!binary |
   AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
   AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
   AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-
-out_formatted_data: |
-  [87, 104, 97, 116, 32, 105, 115, 32, 121, 111, 117, 114, 32, 110, 97, 109, 101, 63, 10, 0, 72, 101, 108, 108, 111, 44, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
 
 out_stdout: |
   source LoC: 55 code instr: 37

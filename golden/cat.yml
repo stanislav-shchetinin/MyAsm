@@ -13,9 +13,6 @@ in_source: |
 in_stdin: |
   1232fro
 
-out_code: !!binary |
-  AAAASAUAABgBAABQAAAACAAAABAAAACg
-
 out_formatted_code: |
   {'index': 0, 'opcode': <Opcode.INPUT: 9>, 'arg': 0}
   {'index': 1, 'opcode': <Opcode.JZ: 3>, 'arg': 5}
@@ -24,9 +21,13 @@ out_formatted_code: |
   {'index': 4, 'opcode': <Opcode.JMP: 2>, 'arg': 0}
   {'index': 5, 'opcode': <Opcode.HLT: 20>, 'arg': 0}
 
-out_data: !!binary |
+out_formatted_data: |-
+  []
 
-out_formatted_data: |
+out_code: !!binary |
+  AAAASAUAABgBAABQAAAACAAAABAAAACg
+
+out_data: !!binary |
 
 out_stdout: |
   source LoC: 11 code instr: 6
