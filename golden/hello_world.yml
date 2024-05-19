@@ -23,7 +23,7 @@ in_stdin: |
 
 
 out_code: !!binary |
-  AAAAAAAAABEJAAADAQAACgAAAAEAAAALAAAAEwAAAAEBAAACAAAAFA==
+  AAAAAAAAAIgJAAAYAQAAUAAAAAgAAABYAAAAmAAAAAgBAAAQAAAAoA==
 
 out_formatted_code: |
   {'index': 0, 'opcode': <Opcode.PUSH: 0>, 'arg': 0}

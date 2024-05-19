@@ -14,7 +14,7 @@ in_stdin: |
   1232fro
 
 out_code: !!binary |
-  AAAACQUAAAMBAAAKAAAAAQAAAAIAAAAU
+  AAAASAUAABgBAABQAAAACAAAABAAAACg
 
 out_formatted_code: |
   {'index': 0, 'opcode': <Opcode.INPUT: 9>, 'arg': 0}
