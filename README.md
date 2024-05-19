@@ -150,46 +150,46 @@ foo:
 | 0      | Instruction Fetch  | sel_mpc_opcode, latch_mpc                                                   |
 | 1      | push               | sel_sp_next, latch_sp, sel_mpc_next, latch_mpc                              |
 | 2      |                    | sel_sreg_tos, latch_sreg, sel_mpc_next, latch_mpc                           |
-| 3      |                    | sel_tos_cu_arg, latch_tos, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc   |
-| 4      | jmp                | sel_jmp, sel_pc, latch_pc, sel_mpc_zero, latch_mpc                          |
-| 5      | jz                 | sel_jz, sel_pc, latch_pc,  sel_mpc_zero, latch_mpc                          |
-| 6      | jnz                | sel_jnz, sel_pc, latch_pc,  sel_mpc_zero, latch_mpc                         |
-| 7      | js                 | sel_js, sel_pc, latch_pc,  sel_mpc_zero, latch_mpc                          |
-| 8      | jns                | sel_jns, sel_pc, latch_pc,  sel_mpc_zero, latch_mpc                         |
+| 3      |                    | sel_tos_cu_arg, latch_tos, sel_next, latch_pc, sel_mpc_zero, latch_mpc   |
+| 4      | jmp                | sel_jmp, sel_jmp, latch_pc, sel_mpc_zero, latch_mpc                          |
+| 5      | jz                 | sel_jz, sel_jz, latch_pc,  sel_mpc_zero, latch_mpc                          |
+| 6      | jnz                | sel_jnz, sel_jnz, latch_pc,  sel_mpc_zero, latch_mpc                         |
+| 7      | js                 | sel_js, sel_js, latch_pc,  sel_mpc_zero, latch_mpc                          |
+| 8      | jns                | sel_jns, sel_jns, latch_pc,  sel_mpc_zero, latch_mpc                         |
 | 9      | call               | sel_scp_next, latch_scp, sel_mpc_next, latch_mpc                            |
 | 10     |                    | latch_callst, sel_mpc_next, latch_mpc                                       |
 | 11     |                    | sel_jmp, latch_pc, sel_mpc_zero, latch_mpc                                  |
-| 12     | ret                | sel_ret, sel_pc, latch_pc, sel_mpc_next, latch_mpc                          |
+| 12     | ret                | sel_ret, sel_ret, latch_pc, sel_mpc_next, latch_mpc                          |
 | 13     |                    | sel_scp_prev, latch_scp, sel_mpc_zero, latch_mpc                            |
 | 14     | input              | sel_sp_next, latch_sp, sel_mpc_next, latch_mpc                              |
 | 15     |                    | sel_sreg_tos, latch_sreg, sel_mpc_next, latch_mpc                           |
-| 16     |                    | sel_tos_input, latch_tos, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc    |
-| 17     | output             | write_io, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc                    |
+| 16     |                    | sel_tos_input, latch_tos, sel_next, latch_pc, sel_mpc_zero, latch_mpc    |
+| 17     | output             | write_io, sel_next, latch_pc, sel_mpc_zero, latch_mpc                    |
 | 18     | pop                | sel_tos_sreg, latch_tos, sel_mp_next, latch_mpc                             |
-| 19     |                    | sel_sp_prev, latch_sp, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc       |
+| 19     |                    | sel_sp_prev, latch_sp, sel_next, latch_pc, sel_mpc_zero, latch_mpc       |
 | 20     | swap               | latch_swr, sel_tos_sreg, latch_tos, sel_mpc_next, latch_mpc                 |
-| 21     |                    | sel_sreg_swr, latch_sreg, sel_pc_next, sel_mpc_zero, latch_pc, latch_mpc    |
+| 21     |                    | sel_sreg_swr, latch_sreg, sel_next, sel_mpc_zero, latch_pc, latch_mpc    |
 | 22     | add                | latch_swr, sel_mpc_next, latch_mpc                                          |
 | 23     |                    | alu_add, sel_tos_alu, latch_tos, sel_sp_next, latch_sp, sel_mpc_next,latch_mpc |
-| 24     |                    | sel_sreg_swr, latch_sreg, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc    |
+| 24     |                    | sel_sreg_swr, latch_sreg, sel_next, latch_pc, sel_mpc_zero, latch_mpc    |
 | 25     | sub                | latch_swr, sel_mpc_next, latch_mpc                                          |
 | 26     |                    | alu_sub, sel_tos_alu, latch_tos, sel_sp_next, latch_sp, sel_mpc_next,latch_mpc |
-| 27     |                    | sel_sreg_swr, latch_sreg, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc    |
+| 27     |                    | sel_sreg_swr, latch_sreg, sel_next, latch_pc, sel_mpc_zero, latch_mpc    |
 | 28     | mul                | latch_swr, sel_mpc_next, latch_mpc                                          |
 | 29     |                    | alu_mul, sel_tos_alu, latch_tos, sel_sp_next, latch_sp, sel_mpc_next,latch_mpc |
-| 30     |                    | sel_sreg_swr, latch_sreg, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc    |
+| 30     |                    | sel_sreg_swr, latch_sreg, sel_next, latch_pc, sel_mpc_zero, latch_mpc    |
 | 31     | div                | latch_swr, sel_mpc_next, latch_mpc                                          |
 | 32     |                    | alu_div, sel_tos_alu, latch_tos, sel_sp_next, latch_sp, sel_mpc_next,latch_mpc |
-| 33     |                    | sel_sreg_swr, latch_sreg, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc    |
+| 33     |                    | sel_sreg_swr, latch_sreg, sel_next, latch_pc, sel_mpc_zero, latch_mpc    |
 | 34     | inc                | latch_swr, sel_mpc_next, latch_mpc                                          |
 | 35     |                    | alu_inc, sel_tos_alu, latch_tos, sel_sp_next, latch_sp, sel_mpc_next,latch_mpc |
-| 36     |                    | sel_sreg_swr, latch_sreg, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc    |
+| 36     |                    | sel_sreg_swr, latch_sreg, sel_next, latch_pc, sel_mpc_zero, latch_mpc    |
 | 37     | dec                | latch_swr, sel_mpc_next, latch_mpc                                          |
 | 38     |                    | alu_dec, sel_tos_alu, latch_tos, sel_sp_next, latch_sp, sel_mpc_next,latch_mpc |
-| 39     |                    | sel_sreg_swr, latch_sreg, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc    |
+| 39     |                    | sel_sreg_swr, latch_sreg, sel_next, latch_pc, sel_mpc_zero, latch_mpc    |
 | 40     | load               | latch_swr, sel_next_sp, latch_sp, sel_mpc_next, latch_mpc |
-| 41     |                    | sel_sreg_swr, sel_tos_data_mem, latch_tos, latch_sreg, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc    |
-| 42     | store              | write_dm, sel_pc_next, latch_pc, sel_mpc_zero, latch_mpc                    |
+| 41     |                    | sel_sreg_swr, sel_tos_data_mem, latch_tos, latch_sreg, sel_next, latch_pc, sel_mpc_zero, latch_mpc    |
+| 42     | store              | write_dm, sel_next, latch_pc, sel_mpc_zero, latch_mpc                    |
 
 **Сопоставление сигнала биту в машинном слове:**
 
@@ -219,7 +219,7 @@ foo:
 |         21 |     sel_mpc_next |
 |         22 |     sel_scp_next |
 |         23 |     sel_scp_prev |
-|         24 |           sel_pc |
+|         24 |               -- |
 |         25 |              alu |
 |         26 |                  |
 |         27 |                  |
@@ -227,8 +227,8 @@ foo:
 |         29 |                  |
 |         30 |                  |
 
-В сумме сигналов в Data Path и Control Unit = **38**  
-Если операции ALU кодировать не 6-ю битами (для кажой операции один бит, где 1 - есть сигнал 0 - нет), а 3-мя битами (`000` - нет сигнала, `001` - сумма, `010` - вычитание, `011` - умножение, `100` - деление, `101` - инкремент, `110` - декремент), и sel_jmp_type кодировать 3-мя битами, а не 7-ю (`000` - нет сигнала, `001` - sel_jmp, `010` - sel_js, `011` - sel_jns, `100` - sel_jz, `101` - sel_jnz, `110` - sel_ret, `111` - sel_next) то получится, что необходимо **31** бит для кодирования микроинструкции
+В сумме сигналов в Data Path и Control Unit = **37**  
+Если операции ALU кодировать не 6-ю битами (для кажой операции один бит, где 1 - есть сигнал 0 - нет), а 3-мя битами (`000` - нет сигнала, `001` - сумма, `010` - вычитание, `011` - умножение, `100` - деление, `101` - инкремент, `110` - декремент), и sel_jmp_type кодировать 3-мя битами, а не 7-ю (`000` - нет сигнала, `001` - sel_jmp, `010` - sel_js, `011` - sel_jns, `100` - sel_jz, `101` - sel_jnz, `110` - sel_ret, `111` - sel_next) то получится, что необходимо **30** бит для кодирования микроинструкции
 
 ## Транслятор
 
