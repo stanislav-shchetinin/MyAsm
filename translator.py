@@ -199,12 +199,12 @@ def translate_stage_1(text: list[str]) -> (dict[str, int], list[dict[str, Opcode
     return labels, code
 
 
-def translate_stage_2(labels: dict[str, int], code: list[dict[str, Opcode | str | int]],
-                      labels2data: dict[str, list[int]]):
+def translate_stage_2(
+    labels: dict[str, int], code: list[dict[str, Opcode | str | int]], labels2data: dict[str, list[int]]
+):
     labels2num: dict[str, int] = get_labels_to_num(labels2data)
     for instruction in code:
         if "arg" in instruction:
-
             if instruction["opcode"] in {Opcode.INPUT, Opcode.OUTPUT}:
                 assert 0 <= int(instruction["arg"]) <= 15, "Number of port must take values in the segment [0; 15]"
                 continue
@@ -215,8 +215,8 @@ def translate_stage_2(labels: dict[str, int], code: list[dict[str, Opcode | str 
                 else:
                     instruction["arg"] = int(instruction["arg"])
                     assert -(1 << 26) <= instruction["arg"] <= (1 << 26) - 1, (
-                        "Integer must take values in the segment ["
-                        "-2^26; 2^26 - 1]")
+                        "Integer must take values in the segment [" "-2^26; 2^26 - 1]"
+                    )
                 continue
 
             label = instruction["arg"]
