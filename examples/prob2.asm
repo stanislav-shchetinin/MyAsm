@@ -1,6 +1,5 @@
 .data
 buffer: 0
-cnt: 0
 
 .text
 _main:
