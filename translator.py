@@ -172,6 +172,7 @@ def translate_stage_1(text: list[str]) -> (dict[str, int], list[dict[str, Opcode
     # Opcode - в параметре опкода
     code: list[dict[str, Opcode | str | int]] = []
     labels: dict[str, int] = {}
+    code.append({"index": 0, "opcode": Opcode.JMP, "arg": "_main"})
     num_str_decl_section: int = find_substring_row(text, ".text")
     for ind in range(num_str_decl_section + 1, len(text)):
         raw_line = text[ind]
